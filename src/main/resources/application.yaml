@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: smart-healthcare-backend
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: NewPassword@123
+    url: jdbc:mysql://localhost:3306/healthcare_db?createDatabaseIfNotExist=true
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
