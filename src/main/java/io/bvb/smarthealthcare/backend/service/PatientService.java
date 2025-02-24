@@ -2,6 +2,7 @@ package io.bvb.smarthealthcare.backend.service;
 
 
 import io.bvb.smarthealthcare.backend.entity.Patient;
+import io.bvb.smarthealthcare.backend.model.PatientRequest;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,7 +18,11 @@ public class PatientService {
     }
 
     // Save Patient
-    public Patient savePatient(Patient patient) {
+    public Patient savePatient(PatientRequest patientRequest) {
+        final Patient patient = new Patient();
+        patient.setAge(patientRequest.getAge());
+        patient.setName(patientRequest.getName());
+        patient.setEmail(patientRequest.getEmail());
         return patientRepository.save(patient);
     }
 

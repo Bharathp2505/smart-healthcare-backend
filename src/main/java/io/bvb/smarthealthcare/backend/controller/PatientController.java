@@ -2,6 +2,7 @@ package io.bvb.smarthealthcare.backend.controller;
 
 
 import io.bvb.smarthealthcare.backend.entity.Patient;
+import io.bvb.smarthealthcare.backend.model.PatientRequest;
 import io.bvb.smarthealthcare.backend.service.PatientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class PatientController {
 
     // Create Patient
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
+    public ResponseEntity<Patient> createPatient(@RequestBody PatientRequest patient) {
+
         return ResponseEntity.ok(patientService.savePatient(patient));
     }
 
