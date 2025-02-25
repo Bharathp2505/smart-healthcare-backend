@@ -22,9 +22,9 @@ public class PatientController {
 
     // Create Patient
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody PatientRequest patient) {
+    public ResponseEntity<Patient> createPatient(@RequestBody PatientRequest patientRequest) {
 
-        return ResponseEntity.ok(patientService.savePatient(patient));
+        return ResponseEntity.ok(patientService.savePatient(patientRequest));
     }
 
     // Get All Patients

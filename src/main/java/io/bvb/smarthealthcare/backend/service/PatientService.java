@@ -20,9 +20,23 @@ public class PatientService {
     // Save Patient
     public Patient savePatient(PatientRequest patientRequest) {
         final Patient patient = new Patient();
-        patient.setAge(patientRequest.getAge());
-        patient.setName(patientRequest.getName());
-        patient.setEmail(patientRequest.getEmail());
+//        patient.setAge(patientRequest.getAge());
+//        patient.setEmail(patientRequest.getEmail());
+//        patient.setAddress(patientRequest.getAddress());
+//        patient.setAllergies(patientRequest.getAllergies());
+//        patient.setGender(patientRequest.getGender());
+//        patient.setBloodGroup(patientRequest.getBloodGroup());
+//        patient.setDateOfBirth(patientRequest.getDateOfBirth());
+//        patient.setEmergencyName(patientRequest.getEmergencyName());
+//        patient.setEmergencyNumber(patientRequest.getEmergencyNumber());
+//        patient.setInsuranceProvider(patientRequest.getInsuranceProvider());
+//        patient.setFirstName(patientRequest.getFirstName());
+//        patient.setLastName(patientRequest.getLastName());
+//        patient.setPassword(patientRequest.getPassword());
+//        patient.setPhoneNumber(patientRequest.getPhoneNumber());
+//        patient.setPolicyNumber(patientRequest.getPolicyNumber());
+//        patient.setPreconditions(patientRequest.getPreconditions());
+//        patient.setValidityDate(patientRequest.getValidityDate());
         return patientRepository.save(patient);
     }
 
