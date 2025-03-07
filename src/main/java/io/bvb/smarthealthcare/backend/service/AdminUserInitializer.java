@@ -3,7 +3,7 @@ package io.bvb.smarthealthcare.backend.service;
 import io.bvb.smarthealthcare.backend.constant.Gender;
 import io.bvb.smarthealthcare.backend.constant.MaritalStatus;
 import io.bvb.smarthealthcare.backend.entity.User;
-import io.bvb.smarthealthcare.backend.repository.UserRepository;
+import io.bvb.smarthealthcare.backend.repository.UseroldRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class AdminUserInitializer implements CommandLineRunner {
     private static final String ADMIN_PASSWORD = "admin@123";
 
     @Autowired
-    private UserRepository userRepository;
+    private UseroldRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
