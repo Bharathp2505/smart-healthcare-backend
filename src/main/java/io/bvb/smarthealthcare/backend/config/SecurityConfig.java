@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,11 +31,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource())).authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/register").permitAll().anyRequest().authenticated())
-                /*.formLogin(form -> form
-                        .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/home", true)
-                )*/.logout(logout -> logout.logoutUrl("/auth/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/auth/login?logout")).sessionManagement(session -> session.maximumSessions(1).expiredUrl("/auth/login?expired"));
+        http.csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login").permitAll().requestMatchers("/api/auth/logout").authenticated().requestMatchers("/api/patient/**").hasRole("PATIENT").requestMatchers("/api/doctor/**").hasRole("DOCTOR").requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated()).formLogin(form -> form.disable()).logout(logout -> logout.logoutUrl("/api/auth/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"));
 
         return http.build();
     }
