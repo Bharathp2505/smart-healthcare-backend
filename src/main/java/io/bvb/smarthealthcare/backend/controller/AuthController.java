@@ -1,51 +1,47 @@
 package io.bvb.smarthealthcare.backend.controller;
 
-
-import io.bvb.smarthealthcare.backend.constant.LoginUserType;
-import io.bvb.smarthealthcare.backend.model.UserRequest;
-import io.bvb.smarthealthcare.backend.service.UserService;
-import io.bvb.smarthealthcare.backend.util.LoginUserTypeUtil;
+import io.bvb.smarthealthcare.backend.model.DoctorRequest;
+import io.bvb.smarthealthcare.backend.model.LoginRequest;
+import io.bvb.smarthealthcare.backend.model.PatientRequest;
+import io.bvb.smarthealthcare.backend.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity register(@Valid @RequestBody UserRequest userRequest) {
-        userService.registerUser(userRequest);
-        return ResponseEntity.ok("User registered successfully");
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/register/patient")
+    public ResponseEntity<String> registerPatient(@Valid @RequestBody PatientRequest request) {
+        authService.registerPatient(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/register/doctor")
+    public ResponseEntity<String> registerDoctor(@Valid @RequestBody DoctorRequest request) {
+        authService.registerDoctor(request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam(value = "ADMIN") LoginUserType loginUserType, @RequestParam String emailId, @RequestParam String password) {
-        try {
-            LoginUserTypeUtil.setLoginUserType(loginUserType);
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(emailId, password));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } finally {
-            LoginUserTypeUtil.unsetLoginUserType();
-        }
-        return "Login successful";
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+        return authService.login(request, httpRequest);
     }
 
-    @GetMapping("/logout")
-    public String logout() {
-        SecurityContextHolder.clearContext();
-        return "Logged out successfully";
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        return authService.logout(request, response);
     }
 }
-
