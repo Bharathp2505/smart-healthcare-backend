@@ -31,8 +31,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login").permitAll().requestMatchers("/api/auth/logout").authenticated().requestMatchers("/api/patient/**").hasRole("PATIENT").requestMatchers("/api/doctor/**").hasRole("DOCTOR").requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated()).formLogin(form -> form.disable()).logout(logout -> logout.logoutUrl("/api/auth/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"));
-
+        http.csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login").permitAll().requestMatchers("/api/auth/logout").authenticated().requestMatchers("/api/patient/**").hasRole("PATIENT").requestMatchers("/api/doctor/**").authenticated().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated()).formLogin(form -> form.disable()).logout(logout -> logout.logoutUrl("/api/auth/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"));
         return http.build();
     }
 

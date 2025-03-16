@@ -5,6 +5,7 @@ import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.Role;
 import io.bvb.smarthealthcare.backend.entity.User;
 import io.bvb.smarthealthcare.backend.exception.AlreadyRegisteredException;
+import io.bvb.smarthealthcare.backend.exception.InvalidCredentialsException;
 import io.bvb.smarthealthcare.backend.model.DoctorRequest;
 import io.bvb.smarthealthcare.backend.model.LoginRequest;
 import io.bvb.smarthealthcare.backend.model.PatientRequest;
@@ -16,13 +17,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
-public class AuthService {
+public class AuthService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
@@ -97,23 +100,26 @@ public class AuthService {
     }
 
     private void verifyLicenseNumberExists(String licenseNumber) {
-        if (userRepository.existsByPhoneNumber(licenseNumber)) {
+        if (doctorRepository.existsByLicenseNumber(licenseNumber)) {
             throw new AlreadyRegisteredException("License Number", licenseNumber);
         }
     }
 
-    public ResponseEntity<String> login(LoginRequest request, HttpServletRequest httpRequest) {
+    public void login(LoginRequest request, HttpServletRequest httpRequest) {
         Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getEmail());
         if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
-            return ResponseEntity.badRequest().body("Invalid credentials");
+            throw new InvalidCredentialsException();
         }
-
         httpRequest.getSession().setAttribute("user", userOptional.get());
-        return ResponseEntity.ok("Login successful");
     }
 
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return ResponseEntity.ok("Logout successful");
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
     }
 }
