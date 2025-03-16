@@ -31,17 +31,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login").permitAll().requestMatchers("/api/auth/logout").authenticated().requestMatchers("/api/patient/**").hasRole("PATIENT").requestMatchers("/api/doctor/**").authenticated().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated()).formLogin(form -> form.disable()).logout(logout -> logout.logoutUrl("/api/auth/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"));
+        http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable CORS
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/logout").authenticated()
+                        .requestMatchers("/api/patient/**").hasRole("PATIENT")
+                        .requestMatchers("/api/doctor/**").authenticated()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                );
+
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow React frontend
-        configuration.setAllowedMethods(List.of("GET", "POST"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Allow frontend
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // ✅ Allow all methods
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With")); // ✅ Expanded headers
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

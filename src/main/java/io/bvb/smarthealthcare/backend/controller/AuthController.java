@@ -26,13 +26,13 @@ public class AuthController {
     @PostMapping("/register/patient")
     public ResponseEntity<String> registerPatient(@Valid @RequestBody PatientRequest request) {
         authService.registerPatient(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Patient Registered Successfully!!");
     }
 
     @PostMapping("/register/doctor")
     public ResponseEntity<String> registerDoctor(@Valid @RequestBody DoctorRequest request) {
         authService.registerDoctor(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Doctor Registered Successfully!!");
     }
 
     @PostMapping("/login")
