@@ -3,6 +3,7 @@ package io.bvb.smarthealthcare.backend.controller;
 import io.bvb.smarthealthcare.backend.model.DoctorRequest;
 import io.bvb.smarthealthcare.backend.model.LoginRequest;
 import io.bvb.smarthealthcare.backend.model.PatientRequest;
+import io.bvb.smarthealthcare.backend.model.StringResponse;
 import io.bvb.smarthealthcare.backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,25 +25,26 @@ public class AuthController {
     }
 
     @PostMapping("/register/patient")
-    public ResponseEntity<String> registerPatient(@Valid @RequestBody PatientRequest request) {
+    public ResponseEntity<StringResponse> registerPatient(@Valid @RequestBody PatientRequest request) {
         authService.registerPatient(request);
-        return ResponseEntity.ok("Patient Registered Successfully!!");
+        return ResponseEntity.ok(new StringResponse("Patient Registered Successfully!!"));
     }
 
     @PostMapping("/register/doctor")
-    public ResponseEntity<String> registerDoctor(@Valid @RequestBody DoctorRequest request) {
+    public ResponseEntity<StringResponse> registerDoctor(@Valid @RequestBody DoctorRequest request) {
         authService.registerDoctor(request);
-        return ResponseEntity.ok("Doctor Registered Successfully!!");
+        return ResponseEntity.ok(new StringResponse("Doctor Registered Successfully!!"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<StringResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         authService.login(request, httpRequest);
-        return ResponseEntity.ok("Login successful!!");
+        return ResponseEntity.ok(new StringResponse("Login successful!!"));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        return authService.logout(request, response);
+    public ResponseEntity<StringResponse> logout(HttpServletRequest request, HttpServletResponse response) {
+        authService.logout(request, response);
+        return ResponseEntity.ok(new StringResponse("Logout successful!!"));
     }
 }

@@ -113,9 +113,8 @@ public class AuthService implements UserDetailsService {
         httpRequest.getSession().setAttribute("user", userOptional.get());
     }
 
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
-        return ResponseEntity.ok("Logout successful");
     }
 
     @Override
