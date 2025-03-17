@@ -108,6 +108,7 @@ public class AuthService implements UserDetailsService {
     public void login(LoginRequest request, HttpServletRequest httpRequest) {
         Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getEmail());
         if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
+            LOGGER.error("Invalid Credentials : {}", request.getEmail());
             throw new InvalidCredentialsException();
         }
         httpRequest.getSession().setAttribute("user", userOptional.get());
