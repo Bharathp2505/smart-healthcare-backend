@@ -16,27 +16,33 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
-public class AuthService implements UserDetailsService {
+public class AuthService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityContextRepository contextRepository;
 
-    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.passwordEncoder = passwordEncoder;
+        this.contextRepository = contextRepository;
     }
 
     public void registerPatient(PatientRequest request) {
@@ -105,21 +111,37 @@ public class AuthService implements UserDetailsService {
         }
     }
 
-    public void login(LoginRequest request, HttpServletRequest httpRequest) {
+    public void login(LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getEmail());
         if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
             LOGGER.error("Invalid Credentials : {}", request.getEmail());
             throw new InvalidCredentialsException();
         }
-        httpRequest.getSession().setAttribute("user", userOptional.get());
+
+        User user = userOptional.get();
+
+        // Create Authentication object
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user.getEmail(),
+                null,
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()))
+        );
+
+        // Populate SecurityContextHolder
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+
+        // Store the SecurityContext in session for subsequent requests
+        SecurityContextHolder.setContext(securityContext);
+        contextRepository.saveContext(securityContext, httpRequest, httpResponse);
+
+
+        // Set session attribute
+        httpRequest.getSession().setAttribute("user", user);
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextHolder.clearContext();
         request.getSession().invalidate();
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
     }
 }
