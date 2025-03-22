@@ -1,17 +1,18 @@
 package io.bvb.smarthealthcare.backend.service;
 
-import io.bvb.smarthealthcare.backend.entity.Doctor;
-import io.bvb.smarthealthcare.backend.entity.Patient;
-import io.bvb.smarthealthcare.backend.entity.Role;
-import io.bvb.smarthealthcare.backend.entity.User;
+import io.bvb.smarthealthcare.backend.entity.*;
 import io.bvb.smarthealthcare.backend.exception.AlreadyRegisteredException;
+import io.bvb.smarthealthcare.backend.exception.ApplicationException;
 import io.bvb.smarthealthcare.backend.exception.InvalidCredentialsException;
 import io.bvb.smarthealthcare.backend.model.DoctorRequest;
 import io.bvb.smarthealthcare.backend.model.LoginRequest;
 import io.bvb.smarthealthcare.backend.model.PatientRequest;
+import io.bvb.smarthealthcare.backend.model.ResetPassword;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
+import io.bvb.smarthealthcare.backend.repository.PasswordResetTokenRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -24,7 +25,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -36,13 +39,19 @@ public class AuthService {
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecurityContextRepository contextRepository;
+    private final EmailService emailService;
+    private final ResetPasswordService resetPasswordService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository) {
+    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository, EmailService emailService, ResetPasswordService resetPasswordService, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.passwordEncoder = passwordEncoder;
         this.contextRepository = contextRepository;
+        this.emailService = emailService;
+        this.resetPasswordService = resetPasswordService;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
     public void registerPatient(PatientRequest request) {
@@ -66,6 +75,11 @@ public class AuthService {
         patient.setPreConditions(request.getPreConditions());
         patient.setEmergencyNumber(request.getEmergencyNumber());
         patient = patientRepository.save(patient);
+        try {
+            emailService.sendWelcomeEMail(request.getEmail(), request.getFirstName());
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send welcome mail", e);
+        }
         LOGGER.info("Patient registered successfully" + patient.getId());
     }
 
@@ -90,6 +104,11 @@ public class AuthService {
         doctor.setClinicName(request.getClinicName());
         doctor.setQualification(request.getQualification());
         doctor = doctorRepository.save(doctor);
+        try {
+            emailService.sendWelcomeEMail(request.getEmail(), request.getFirstName());
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send welcome mail", e);
+        }
         LOGGER.info("Doctor registered successfully" + doctor.getId());
     }
 
@@ -121,11 +140,7 @@ public class AuthService {
         User user = userOptional.get();
 
         // Create Authentication object
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                user.getEmail(),
-                null,
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()))
-        );
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
 
         // Populate SecurityContextHolder
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
@@ -143,5 +158,31 @@ public class AuthService {
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextHolder.clearContext();
         request.getSession().invalidate();
+    }
+
+    public void forgotPassword(final ResetPassword resetPassword) {
+        final User user = userRepository.findByEmail(resetPassword.getEmail()).orElseThrow(() -> new ApplicationException(String.format("%s is not found.", resetPassword.getEmail())));
+        if (Role.ADMIN.equals(user.getRole())) {
+            throw new ApplicationException("Admin cannot change the password.");
+        }
+        resetPasswordService.generateResetToken(resetPassword.getEmail(), user.getFirstName());
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ApplicationException("Invalid or expired token"));
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new ApplicationException("Token expired");
+        }
+
+        User user = userRepository.findByEmail(resetToken.getEmail())
+                .orElseThrow(() -> new ApplicationException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        passwordResetTokenRepository.deleteByEmail(resetToken.getEmail());
     }
 }

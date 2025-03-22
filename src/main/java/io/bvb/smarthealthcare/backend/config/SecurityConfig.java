@@ -42,7 +42,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable CORS
-                .csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login").permitAll()
+                .csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/register/patient", "/api/auth/register/doctor", "/api/auth/login", "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
                         //.requestMatchers("/api/auth/logout").authenticated()
                         /*.requestMatchers("/api/patient/**").hasRole("PATIENT")
                         .requestMatchers("/api/doctor/**").hasRole("DOCTOR")

@@ -1,18 +1,12 @@
 package io.bvb.smarthealthcare.backend.controller;
 
-import io.bvb.smarthealthcare.backend.model.DoctorRequest;
-import io.bvb.smarthealthcare.backend.model.LoginRequest;
-import io.bvb.smarthealthcare.backend.model.PatientRequest;
-import io.bvb.smarthealthcare.backend.model.StringResponse;
+import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -46,5 +40,17 @@ public class AuthController {
     public ResponseEntity<StringResponse> logout(HttpServletRequest request, HttpServletResponse response) {
         authService.logout(request, response);
         return ResponseEntity.ok(new StringResponse("Logout successful!!"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<StringResponse> forgotPassword(@Valid @RequestBody ResetPassword request) {
+        authService.forgotPassword(request);
+        return ResponseEntity.ok(new StringResponse("Reset password email sent!"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<StringResponse> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok(new StringResponse("Password reset successfully!"));
     }
 }
