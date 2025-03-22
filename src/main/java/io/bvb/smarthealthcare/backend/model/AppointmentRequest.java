@@ -12,11 +12,7 @@ import java.time.LocalTime;
 @Data
 public class AppointmentRequest {
     @NotNull
-    private Long doctorId;
-    @NotNull
     private Long patientId;
     @NotNull
-    private LocalDate date;
-    @NotNull
-    private LocalTime time;
+    private Long timeSlotId;
 }

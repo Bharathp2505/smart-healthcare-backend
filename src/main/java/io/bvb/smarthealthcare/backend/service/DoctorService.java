@@ -12,8 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,18 +37,36 @@ public class DoctorService {
         return appointments;
     }
 
-    public void allocateTimeSlot(TimeSlotRequest request) {
-        if (timeSlotRepository.findByDoctorIdAndDateAndStartTime(request.getDoctorId(), request.getDate(), request.getStartTime()).isPresent()) {
-            throw new RuntimeException("TimeSlotOccupiedException: This time slot is already booked.");
+    @Transactional
+    public List<TimeSlot> allocateTimeSlot(TimeSlotRequest request) {
+        if (request.getDuration() <= 0 || request.getDuration() > 60) {
+            throw new IllegalArgumentException("Invalid slot duration. Must be between 1 and 60 minutes.");
         }
 
-        TimeSlot timeSlot = new TimeSlot();
-        timeSlot.setDoctor(doctorRepository.findById(request.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found")));
-        timeSlot.setDate(request.getDate());
-        timeSlot.setStartTime(request.getStartTime());
-        timeSlot.setClinicName(request.getClinicName());
-        timeSlotRepository.save(timeSlot);
-        LOGGER.info("Time slot allocated successfully");
+        Doctor doctor = doctorRepository.findById(request.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        List<TimeSlot> timeSlots = new ArrayList<>();
+        LocalTime current = request.getStartTime();
+
+        while (current.plusMinutes(request.getDuration()).isBefore(request.getEndTime()) || current.plusMinutes(request.getDuration()).equals(request.getEndTime())) {
+            if (timeSlotRepository.existsByDoctorIdAndDateAndStartTime(request.getDoctorId(), request.getDate(), current)) {
+                throw new RuntimeException("Time slot already allocated at " + current);
+            }
+
+            TimeSlot timeSlot = new TimeSlot();
+            timeSlot.setDoctor(doctor);
+            timeSlot.setDate(request.getDate());
+            timeSlot.setStartTime(current);
+            timeSlot.setEndTime(current.plusMinutes(request.getDuration()));
+            timeSlot.setDuration(request.getDuration());
+            timeSlot.setClinicName(request.getClinicName());
+            timeSlots.add(timeSlot);
+
+            current = current.plusMinutes(request.getDuration());
+        }
+
+        return timeSlotRepository.saveAll(timeSlots);
     }
 
     public List<Doctor> searchDoctors(String searchString) {

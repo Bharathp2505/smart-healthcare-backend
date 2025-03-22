@@ -1,5 +1,9 @@
 package io.bvb.smarthealthcare.backend.service;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
+import io.bvb.smarthealthcare.backend.entity.Patient;
+import io.bvb.smarthealthcare.backend.entity.TimeSlot;
+import io.bvb.smarthealthcare.backend.exception.TimeSlotOccupiedException;
+import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.model.AppointmentRequest;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
@@ -9,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PatientService {
@@ -25,22 +30,21 @@ public class PatientService {
         this.patientRepository = patientRepository;
     }
 
-    public ResponseEntity<String> bookAppointment(AppointmentRequest request) {
-        boolean isTimeSlotBooked = appointmentRepository.findByDoctorIdAndDate(request.getDoctorId(), request.getDate())
-                .stream()
-                .anyMatch(appointment -> appointment.getTime().equals(request.getTime()));
+    public ResponseEntity<String> bookAppointment(final AppointmentRequest appointmentRequest) {
+        TimeSlot timeSlot = timeSlotRepository.findById(appointmentRequest.getTimeSlotId())
+                .orElseThrow(() -> new RuntimeException("Time slot not found"));
 
-        if (isTimeSlotBooked) {
-            throw new RuntimeException("TimeSlotOccupiedException: This time slot is already booked.");
+        if (appointmentRepository.existsByTimeSlot(timeSlot)) {
+            throw new RuntimeException("Time slot already booked");
         }
 
+        Patient patient = patientRepository.findById(appointmentRequest.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
         Appointment appointment = new Appointment();
-        appointment.setDoctor(doctorRepository.findById(request.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found")));
-        appointment.setPatient(patientRepository.findById(request.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found")));
-        appointment.setDate(request.getDate());
-        appointment.setTime(request.getTime());
+        appointment.setPatient(patient);
+        appointment.setTimeSlot(timeSlot);
+
         appointmentRepository.save(appointment);
         return ResponseEntity.ok("Appointment booked successfully");
     }

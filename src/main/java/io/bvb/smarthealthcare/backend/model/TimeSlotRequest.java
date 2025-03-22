@@ -23,6 +23,11 @@ public class TimeSlotRequest {
 
     @NotNull
     private LocalTime startTime;
+    @NotNull
+    private LocalTime endTime;
+
+    @NotNull
+    private Integer duration;
 
     @NotBlank
     private String clinicName;

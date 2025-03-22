@@ -26,5 +26,7 @@ public class TimeSlot {
     private Doctor doctor;
     private LocalDate date;
     private LocalTime startTime;
+    private LocalTime endTime;
+    private Integer duration;
     private String clinicName;
 }
