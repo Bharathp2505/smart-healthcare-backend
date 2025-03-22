@@ -48,7 +48,7 @@ public class PatientService {
     }
 
     public Patient getPatient(Long id) {
-        return patientRepository.findById(id)
+        return patientRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new PatientNotFoundException(id));
     }
 
@@ -62,7 +62,7 @@ public class PatientService {
             patientResponse.setLastName(patient.getLastName());
             patientResponse.setGender(patient.getGender());
             patientResponse.setDateOfBirth(patient.getDateOfBirth());
-            patientResponse.setAddress(patientResponse.getAddress());
+            patientResponse.setAddress(patient.getAddress());
             patientResponse.setMaritalStatus(patient.getMaritalStatus());
             patientResponse.setEmergencyNumber(patient.getEmergencyNumber());
             patientResponse.setEmergencyName(patient.getEmergencyName());

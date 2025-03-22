@@ -58,7 +58,7 @@ public class DoctorService {
         doctorResponse.setExperience(doctor.getExperience());
         doctorResponse.setSpecialization(doctor.getSpecialization());
         doctorResponse.setClinicAddress(doctor.getClinicAddress());
-        doctorResponse.setQualification(doctorResponse.getQualification());
+        doctorResponse.setQualification(doctor.getQualification());
         doctorResponse.setLicenseNumber(doctor.getLicenseNumber());
         return doctorResponse;
     }
@@ -71,7 +71,7 @@ public class DoctorService {
     }
 
     public Doctor getDoctor(Long id) {
-       return doctorRepository.findById(id)
+       return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new DoctorNotFoundException(id));
     }
 
