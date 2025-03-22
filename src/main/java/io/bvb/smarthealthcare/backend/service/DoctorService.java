@@ -4,20 +4,23 @@ import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
+import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
+import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
+import io.bvb.smarthealthcare.backend.model.DoctorResponse;
 import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorService {
@@ -32,8 +35,48 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
+    public List<DoctorResponse> listDoctors() {
+        List<Doctor> doctors = doctorRepository.findAllByDeleted(Boolean.FALSE);
+        return convertDoctorsToResponse(doctors);
+    }
+
+    private List<DoctorResponse> convertDoctorsToResponse(List<Doctor> doctors) {
+        return doctors.stream().map(this::convertDoctorToResponse).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private DoctorResponse convertDoctorToResponse(Doctor doctor) {
+        DoctorResponse doctorResponse = new DoctorResponse();
+        doctorResponse.setId(doctor.getId());
+        doctorResponse.setEmail(doctor.getEmail());
+        doctorResponse.setPhoneNumber(doctor.getPhoneNumber());
+        doctorResponse.setFirstName(doctor.getFirstName());
+        doctorResponse.setLastName(doctor.getLastName());
+        doctorResponse.setGender(doctor.getGender());
+        doctorResponse.setDateOfBirth(doctor.getDateOfBirth());
+        doctorResponse.setClinicName(doctor.getClinicName());
+        doctorResponse.setStatus(doctor.getStatus());
+        doctorResponse.setExperience(doctor.getExperience());
+        doctorResponse.setSpecialization(doctor.getSpecialization());
+        doctorResponse.setClinicAddress(doctor.getClinicAddress());
+        doctorResponse.setQualification(doctorResponse.getQualification());
+        doctorResponse.setLicenseNumber(doctor.getLicenseNumber());
+        return doctorResponse;
+    }
+
+    @Transactional
+    public void deleteDoctor(Long id) {
+        final Doctor doctor = getDoctor(id);
+        doctor.setDeleted(Boolean.TRUE);
+        doctorRepository.save(doctor);
+    }
+
+    public Doctor getDoctor(Long id) {
+       return doctorRepository.findById(id)
+                .orElseThrow(() -> new DoctorNotFoundException(id));
+    }
+
     public List<Appointment> getTodaysAppointments(Long doctorId) {
-        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
+        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
         return appointments;
     }
 
@@ -43,8 +86,7 @@ public class DoctorService {
             throw new IllegalArgumentException("Invalid slot duration. Must be between 1 and 60 minutes.");
         }
 
-        Doctor doctor = doctorRepository.findById(request.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        Doctor doctor = getDoctor(request.getDoctorId());
 
         List<TimeSlot> timeSlots = new ArrayList<>();
         LocalTime current = request.getStartTime();
@@ -73,10 +115,10 @@ public class DoctorService {
         return doctorRepository.findByClinicNameOrSpecializationContainingIgnoreCase(searchString, searchString);
     }
 
-    public List<Doctor> listDoctors(DoctorStatus doctorStatus) {
+    public List<DoctorResponse> listDoctors(DoctorStatus doctorStatus) {
         if (doctorStatus != null) {
-            doctorRepository.findDoctorsByStatus(doctorStatus);
+            return convertDoctorsToResponse(doctorRepository.findDoctorsByStatusAndDeleted(doctorStatus, Boolean.FALSE));
         }
-        return doctorRepository.findAll();
+        return listDoctors();
     }
 }

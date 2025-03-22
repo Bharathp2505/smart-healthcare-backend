@@ -2,6 +2,7 @@ package io.bvb.smarthealthcare.backend.service;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
+import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.InvalidDataException;
 import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
@@ -24,7 +25,7 @@ public class AdminService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
         if (doctorOptional.isEmpty()) {
             LOGGER.error("Doctor not found : {}", doctorId);
-            throw new UserNotFoundException(String.valueOf(doctorId));
+            throw new DoctorNotFoundException(doctorId);
         }
         Doctor doctor = doctorOptional.get();
         if (doctor.getStatus() != DoctorStatus.PENDING) {
@@ -40,7 +41,7 @@ public class AdminService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
         if (doctorOptional.isEmpty()) {
             LOGGER.error("Doctor not found : {}", doctorId);
-            throw new UserNotFoundException(String.valueOf(doctorId));
+            throw new DoctorNotFoundException(doctorId);
         }
 
         Doctor doctor = doctorOptional.get();
