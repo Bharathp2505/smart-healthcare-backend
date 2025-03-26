@@ -1,6 +1,7 @@
 package io.bvb.smarthealthcare.backend.model;
 
 import io.bvb.smarthealthcare.backend.constant.Gender;
+import io.bvb.smarthealthcare.backend.constant.LoginUserType;
 import lombok.*;
 
 import java.util.Date;
@@ -18,4 +19,5 @@ public class UserResponse {
     private String lastName;
     private Date dateOfBirth;
     private Gender gender;
+    private LoginUserType userType;
 }

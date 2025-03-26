@@ -1,13 +1,11 @@
 package io.bvb.smarthealthcare.backend.service;
 
+import io.bvb.smarthealthcare.backend.constant.LoginUserType;
 import io.bvb.smarthealthcare.backend.entity.*;
 import io.bvb.smarthealthcare.backend.exception.AlreadyRegisteredException;
 import io.bvb.smarthealthcare.backend.exception.ApplicationException;
 import io.bvb.smarthealthcare.backend.exception.InvalidCredentialsException;
-import io.bvb.smarthealthcare.backend.model.DoctorRequest;
-import io.bvb.smarthealthcare.backend.model.LoginRequest;
-import io.bvb.smarthealthcare.backend.model.PatientRequest;
-import io.bvb.smarthealthcare.backend.model.ResetPassword;
+import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.PasswordResetTokenRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
@@ -130,7 +128,7 @@ public class AuthService {
         }
     }
 
-    public void login(LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    public UserResponse login(LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getEmail());
         if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
             LOGGER.error("Invalid Credentials : {}", request.getEmail());
@@ -150,9 +148,23 @@ public class AuthService {
         SecurityContextHolder.setContext(securityContext);
         contextRepository.saveContext(securityContext, httpRequest, httpResponse);
 
-
+        final UserResponse userResponse = mapUserToUserResponse(user);
         // Set session attribute
-        httpRequest.getSession().setAttribute("user", user);
+        httpRequest.getSession().setAttribute("user", userResponse);
+        return userResponse;
+    }
+
+    private UserResponse mapUserToUserResponse(User user) {
+        final UserResponse userResponse = new UserResponse();
+        userResponse.setEmail(user.getEmail());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setDateOfBirth(user.getDateOfBirth());
+        userResponse.setGender(user.getGender());
+        userResponse.setId(user.getId());
+        userResponse.setPhoneNumber(user.getPhoneNumber());
+        userResponse.setUserType(LoginUserType.getUserType(user.getRole()));
+        return userResponse;
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
