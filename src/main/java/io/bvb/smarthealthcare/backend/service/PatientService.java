@@ -1,21 +1,14 @@
 package io.bvb.smarthealthcare.backend.service;
 
-import io.bvb.smarthealthcare.backend.constant.MaritalStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
-import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
-import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.PatientNotFoundException;
 import io.bvb.smarthealthcare.backend.model.AppointmentRequest;
 import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
-import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

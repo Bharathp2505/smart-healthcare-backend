@@ -33,7 +33,7 @@ public class AdminUserInitializer implements CommandLineRunner {
             admin.setLastName("");
             admin.setGender(Gender.OTHER);
             admin.setPhoneNumber("5555555555");
-            admin.setDateOfBirth(new Date(2000/10/19));
+            admin.setDateOfBirth(new Date(2000 / 10 / 19));
             admin.setRole(Role.ADMIN);
             userRepository.save(admin);
             System.out.println("Admin user created!");
