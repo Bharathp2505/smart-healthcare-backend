@@ -4,6 +4,7 @@ import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +15,13 @@ import java.util.List;
 
 @Service
 public class TimeSlotService {
-    private final TimeSlotRepository timeSlotRepository;
-    private final DoctorRepository doctorRepository;
     public TimeSlotService(TimeSlotRepository timeSlotRepository, DoctorRepository doctorRepository) {
         this.timeSlotRepository = timeSlotRepository;
         this.doctorRepository = doctorRepository;
     }
+
+    private final TimeSlotRepository timeSlotRepository;
+    private final DoctorRepository doctorRepository;
 
     @Transactional
     public List<TimeSlot> allocateTimeSlots(Long doctorId, LocalDate date, LocalTime startTime, LocalTime endTime, int duration, String clinicName) {

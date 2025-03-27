@@ -1,5 +1,4 @@
 package io.bvb.smarthealthcare.backend.entity;
-
 import io.bvb.smarthealthcare.backend.constant.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

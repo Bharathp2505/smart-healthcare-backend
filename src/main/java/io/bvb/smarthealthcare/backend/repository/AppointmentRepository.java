@@ -9,6 +9,5 @@ import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByDoctorIdAndDate(Long doctorId, LocalDate date);
-
     boolean existsByTimeSlot(TimeSlot timeSlot);
 }

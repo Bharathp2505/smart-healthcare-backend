@@ -6,6 +6,7 @@ import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
 import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
+import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.model.DoctorResponse;
 import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,7 +74,7 @@ public class DoctorService {
     }
 
     public Doctor getDoctor(Long id) {
-        return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
+       return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new DoctorNotFoundException(id));
     }
 

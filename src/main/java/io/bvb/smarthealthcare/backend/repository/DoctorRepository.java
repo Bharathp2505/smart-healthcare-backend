@@ -9,9 +9,7 @@ import java.util.Optional;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<Doctor> findAllByDeleted(Boolean isDeleted);
-
     Optional<Doctor> findByIdAndDeleted(Long id, Boolean isDeleted);
-
     boolean existsByLicenseNumber(String licenseNumber);
 
     List<Doctor> findByClinicNameOrSpecializationContainingIgnoreCase(String clinicName, String specialization);

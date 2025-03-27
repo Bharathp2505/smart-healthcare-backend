@@ -24,7 +24,6 @@ public class DoctorController {
         this.doctorService = doctorService;
         this.timeSlotService = timeSlotService;
     }
-
     @GetMapping
     public List<DoctorResponse> listDoctors(@RequestParam(name = "doctorStatus", required = false) DoctorStatus doctorStatus) {
         return doctorService.listDoctors(doctorStatus);

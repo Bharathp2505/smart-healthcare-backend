@@ -4,6 +4,7 @@ import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.InvalidDataException;
+import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
