@@ -1,6 +1,7 @@
 package io.bvb.smarthealthcare.backend.service;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
+import io.bvb.smarthealthcare.backend.constant.LoginUserType;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ public class DoctorService {
         doctorResponse.setFirstName(doctor.getFirstName());
         doctorResponse.setLastName(doctor.getLastName());
         doctorResponse.setGender(doctor.getGender());
+        doctorResponse.setUserType(LoginUserType.getUserType(doctor.getRole()));
         doctorResponse.setDateOfBirth(doctor.getDateOfBirth());
         doctorResponse.setClinicName(doctor.getClinicName());
         doctorResponse.setStatus(doctor.getStatus());
@@ -76,7 +79,7 @@ public class DoctorService {
     }
 
     public List<Appointment> getTodaysAppointments(Long doctorId) {
-        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
         return appointments;
     }
 
@@ -95,7 +98,6 @@ public class DoctorService {
             if (timeSlotRepository.existsByDoctorIdAndDateAndStartTime(request.getDoctorId(), request.getDate(), current)) {
                 throw new RuntimeException("Time slot already allocated at " + current);
             }
-
             TimeSlot timeSlot = new TimeSlot();
             timeSlot.setDoctor(doctor);
             timeSlot.setDate(request.getDate());

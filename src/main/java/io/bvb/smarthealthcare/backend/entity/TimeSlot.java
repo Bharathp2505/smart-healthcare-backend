@@ -28,5 +28,6 @@ public class TimeSlot {
     private LocalTime startTime;
     private LocalTime endTime;
     private Integer duration;
+    private boolean isBooked;
     private String clinicName;
 }

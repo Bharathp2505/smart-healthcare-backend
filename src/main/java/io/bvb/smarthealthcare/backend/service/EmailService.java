@@ -15,6 +15,7 @@ import java.util.Map;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final String fromAddress = "bvijay123reddy@gmail.com";
 
     public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
@@ -34,7 +35,7 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject("Welcome to our Smart Health Care Service");
         helper.setText(htmlContent, true); // true to enable HTML content
-        helper.setFrom("bvijay123reddy@gmail.com");
+        helper.setFrom(fromAddress);
 
         mailSender.send(message);
     }
@@ -53,7 +54,7 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject("Reset Your Password");
         helper.setText(htmlContent, true); // Enable HTML content
-        helper.setFrom("bvijay123reddy@gmail.com");
+        helper.setFrom(fromAddress);
         mailSender.send(message);
     }
 }

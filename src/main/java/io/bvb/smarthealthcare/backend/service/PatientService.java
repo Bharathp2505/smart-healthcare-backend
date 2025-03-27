@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,12 +78,11 @@ public class PatientService {
     public ResponseEntity<String> bookAppointment(final AppointmentRequest appointmentRequest) {
         TimeSlot timeSlot = timeSlotRepository.findById(appointmentRequest.getTimeSlotId()).orElseThrow(() -> new RuntimeException("Time slot not found"));
 
-        if (appointmentRepository.existsByTimeSlot(timeSlot)) {
+        if (timeSlot.isBooked()) {
             throw new RuntimeException("Time slot already booked");
         }
 
         Patient patient = patientRepository.findById(appointmentRequest.getPatientId()).orElseThrow(() -> new RuntimeException("Patient not found"));
-
         Appointment appointment = new Appointment();
         appointment.setPatient(patient);
         appointment.setTimeSlot(timeSlot);
@@ -92,7 +92,7 @@ public class PatientService {
     }
 
     public ResponseEntity<List<Appointment>> getUpcomingAppointments(Long patientId) {
-        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(patientId, LocalDate.now());
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndDate(patientId, LocalDate.now());
         return ResponseEntity.ok(appointments);
     }
 }

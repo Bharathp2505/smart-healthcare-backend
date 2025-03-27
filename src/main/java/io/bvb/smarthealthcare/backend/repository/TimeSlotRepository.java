@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
-    Optional<TimeSlot> findByDoctorIdAndDateAndStartTime(Long doctorId, LocalDate date, LocalTime startTime);
     List<TimeSlot> findByDoctorId(Long doctorId);
-    List<TimeSlot> findByDoctorIdAndDate(Long doctorId, LocalDate date);
     boolean existsByDoctorIdAndDateAndStartTime(Long doctorId, LocalDate date, LocalTime startTime);
+    List<TimeSlot> findByDoctorIdAndDate(Long doctorId, LocalDate date);
+    Optional<TimeSlot> findByDoctorIdAndDateAndStartTime(Long doctorId, LocalDate date, LocalTime startTime);
 }
