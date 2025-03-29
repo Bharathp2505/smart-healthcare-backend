@@ -48,10 +48,8 @@ public class TimeSlotService {
             timeSlot.setDuration(duration);
             timeSlot.setClinicName(clinicName);
             timeSlots.add(timeSlot);
-
             current = current.plusMinutes(duration);
         }
-
         return timeSlotRepository.saveAll(timeSlots);
     }
 
