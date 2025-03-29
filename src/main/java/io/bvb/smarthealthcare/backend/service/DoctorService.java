@@ -148,7 +148,7 @@ public class DoctorService {
         return listDoctors();
     }
 
-    private Doctor getDoctorById(Long id) {
+    public Doctor getDoctorById(Long id) {
         return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new DoctorNotFoundException(id));
     }

@@ -2,25 +2,28 @@ package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
+import io.bvb.smarthealthcare.backend.entity.Prescription;
 import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.service.DoctorService;
-import io.bvb.smarthealthcare.backend.service.TimeSlotService;
+import io.bvb.smarthealthcare.backend.service.PrescriptionService;
+import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/doctors")
+@RequestMapping(value = "/api/doctors", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DoctorController {
     private final DoctorService doctorService;
-    private final TimeSlotService timeSlotService;
+    private final PrescriptionService prescriptionService;
 
-    public DoctorController(DoctorService doctorService, TimeSlotService timeSlotService) {
+    public DoctorController(DoctorService doctorService, PrescriptionService prescriptionService) {
         this.doctorService = doctorService;
-        this.timeSlotService = timeSlotService;
+        this.prescriptionService = prescriptionService;
     }
 
     @GetMapping
@@ -45,8 +48,8 @@ public class DoctorController {
     }
 
     @GetMapping("/todays-appointments")
-    public List<Appointment> getTodaysAppointments(final HttpSession httpSession) {
-        return doctorService.getTodaysAppointments(((UserResponse) httpSession.getAttribute("user")).getId());
+    public List<Appointment> getTodaysAppointments() {
+        return doctorService.getTodaysAppointments(CurrentUserData.getUser().getId());
     }
 
     @PostMapping("/allocate-timeslots")
@@ -57,5 +60,19 @@ public class DoctorController {
     @GetMapping("/timeslots/{doctorId}")
     public TimeSlotResponse getTimeslotsByDoctor(@PathVariable Long doctorId) {
         return doctorService.getTimeSlotsByDoctorId(doctorId);
+    }
+
+    @PostMapping("/prescribe")
+    public ResponseEntity<Prescription> prescribeMedication(@Valid @RequestBody PrescriptionRequest request, final HttpSession session) {
+        Prescription prescription = prescriptionService.prescribeMedication(
+                CurrentUserData.getUser().getId(),
+                request.getPatientId(),
+                request.getMedicationName(),
+                request.getDosage(),
+                request.getTimeToTake(),
+                request.getStartDate(),
+                request.getEndDate()
+        );
+        return ResponseEntity.ok(prescription);
     }
 }

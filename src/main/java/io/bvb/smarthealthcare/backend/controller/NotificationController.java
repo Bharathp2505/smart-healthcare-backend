@@ -2,9 +2,9 @@ package io.bvb.smarthealthcare.backend.controller;
 
 
 import io.bvb.smarthealthcare.backend.model.NotificationResponse;
-import io.bvb.smarthealthcare.backend.model.UserResponse;
 import io.bvb.smarthealthcare.backend.service.NotificationService;
-import jakarta.servlet.http.HttpSession;
+import io.bvb.smarthealthcare.backend.util.CurrentUserData;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping(value = "/api/notifications", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -23,8 +23,8 @@ public class NotificationController {
     }
 
     @GetMapping
-    public List<NotificationResponse> allNotifications(final HttpSession session) {
-        return notificationService.getUserNotifications(((UserResponse) session.getAttribute("user")).getId());
+    public List<NotificationResponse> allNotifications() {
+        return notificationService.getUserNotifications(CurrentUserData.getUser().getId());
     }
 
     @GetMapping("/{userId}")

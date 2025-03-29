@@ -6,13 +6,14 @@ import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.model.StringResponse;
 import io.bvb.smarthealthcare.backend.service.PatientService;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/patients")
+@RequestMapping(value = "/api/patients", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
     private final PatientService patientService;
