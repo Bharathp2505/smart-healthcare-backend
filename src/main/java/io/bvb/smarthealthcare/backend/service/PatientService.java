@@ -1,27 +1,18 @@
 package io.bvb.smarthealthcare.backend.service;
 
-import io.bvb.smarthealthcare.backend.constant.MaritalStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
-import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
-import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.PatientNotFoundException;
 import io.bvb.smarthealthcare.backend.model.AppointmentRequest;
 import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
-import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,38 +32,15 @@ public class PatientService {
         return convertPatientToPatientResponses(patientRepository.findAllByDeleted(Boolean.FALSE));
     }
 
+    public PatientResponse getPatient(Long id) {
+        return convertPatientToPatientResponse(getPatientById(id));
+    }
+
     @Transactional
     public void deletePatient(Long id) {
-        final Patient patient = getPatient(id);
+        final Patient patient = getPatientById(id);
         patient.setDeleted(Boolean.TRUE);
         patientRepository.save(patient);
-    }
-
-    public Patient getPatient(Long id) {
-        return patientRepository.findByIdAndDeleted(id, Boolean.FALSE)
-                .orElseThrow(() -> new PatientNotFoundException(id));
-    }
-
-    private List<PatientResponse> convertPatientToPatientResponses(List<Patient> patients) {
-        return patients.stream().map(patient -> {
-            final PatientResponse patientResponse = new PatientResponse();
-            patientResponse.setId(patient.getId());
-            patientResponse.setEmail(patient.getEmail());
-            patientResponse.setPhoneNumber(patient.getPhoneNumber());
-            patientResponse.setFirstName(patient.getFirstName());
-            patientResponse.setLastName(patient.getLastName());
-            patientResponse.setGender(patient.getGender());
-            patientResponse.setDateOfBirth(patient.getDateOfBirth());
-            patientResponse.setAddress(patient.getAddress());
-            patientResponse.setMaritalStatus(patient.getMaritalStatus());
-            patientResponse.setEmergencyNumber(patient.getEmergencyNumber());
-            patientResponse.setEmergencyName(patient.getEmergencyName());
-            patientResponse.setAllergies(patient.getAllergies());
-            patientResponse.setBloodGroup(patient.getBloodGroup());
-            patientResponse.setMaritalStatus(patient.getMaritalStatus());
-            patientResponse.setPreConditions(patient.getPreConditions());
-            return patientResponse;
-        }).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ResponseEntity<String> bookAppointment(final AppointmentRequest appointmentRequest) {
@@ -92,7 +60,36 @@ public class PatientService {
     }
 
     public ResponseEntity<List<Appointment>> getUpcomingAppointments(Long patientId) {
-        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndDate(patientId, LocalDate.now());
+        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(patientId, LocalDate.now());
         return ResponseEntity.ok(appointments);
+    }
+
+    private Patient getPatientById(Long id) {
+        return patientRepository.findByIdAndDeleted(id, Boolean.FALSE)
+                .orElseThrow(() -> new PatientNotFoundException(id));
+    }
+
+    private List<PatientResponse> convertPatientToPatientResponses(List<Patient> patients) {
+        return patients.stream().map(this::convertPatientToPatientResponse).collect(Collectors.toList());
+    }
+
+    private PatientResponse convertPatientToPatientResponse(Patient patient) {
+        final PatientResponse patientResponse = new PatientResponse();
+        patientResponse.setId(patient.getId());
+        patientResponse.setEmail(patient.getEmail());
+        patientResponse.setPhoneNumber(patient.getPhoneNumber());
+        patientResponse.setFirstName(patient.getFirstName());
+        patientResponse.setLastName(patient.getLastName());
+        patientResponse.setGender(patient.getGender());
+        patientResponse.setDateOfBirth(patient.getDateOfBirth());
+        patientResponse.setAddress(patient.getAddress());
+        patientResponse.setMaritalStatus(patient.getMaritalStatus());
+        patientResponse.setEmergencyNumber(patient.getEmergencyNumber());
+        patientResponse.setEmergencyName(patient.getEmergencyName());
+        patientResponse.setAllergies(patient.getAllergies());
+        patientResponse.setBloodGroup(patient.getBloodGroup());
+        patientResponse.setMaritalStatus(patient.getMaritalStatus());
+        patientResponse.setPreConditions(patient.getPreConditions());
+        return patientResponse;
     }
 }

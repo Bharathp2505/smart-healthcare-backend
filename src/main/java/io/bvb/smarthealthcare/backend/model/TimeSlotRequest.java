@@ -1,5 +1,7 @@
 package io.bvb.smarthealthcare.backend.model;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,18 +19,16 @@ import java.time.LocalTime;
 public class TimeSlotRequest {
     @NotNull
     private Long doctorId;
-
     @NotNull
+    @FutureOrPresent
     private LocalDate date;
-
     @NotNull
+    @FutureOrPresent
     private LocalTime startTime;
     @NotNull
+    @Future
     private LocalTime endTime;
-
-    @NotNull
-    private Integer duration;
-
+    private Integer duration = 60;
     @NotBlank
     private String clinicName;
 }

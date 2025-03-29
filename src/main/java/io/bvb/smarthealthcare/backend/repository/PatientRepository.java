@@ -2,7 +2,6 @@ package io.bvb.smarthealthcare.backend.repository;
 
 
 import io.bvb.smarthealthcare.backend.entity.Patient;
-import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

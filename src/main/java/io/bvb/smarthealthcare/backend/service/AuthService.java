@@ -40,8 +40,9 @@ public class AuthService {
     private final EmailService emailService;
     private final ResetPasswordService resetPasswordService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final NotificationService notificationService;
 
-    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository, EmailService emailService, ResetPasswordService resetPasswordService, PasswordResetTokenRepository passwordResetTokenRepository) {
+    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository, EmailService emailService, ResetPasswordService resetPasswordService, PasswordResetTokenRepository passwordResetTokenRepository, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
@@ -50,6 +51,7 @@ public class AuthService {
         this.emailService = emailService;
         this.resetPasswordService = resetPasswordService;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.notificationService = notificationService;
     }
 
     public void registerPatient(PatientRequest request) {
@@ -74,7 +76,9 @@ public class AuthService {
         patient.setEmergencyNumber(request.getEmergencyNumber());
         patient = patientRepository.save(patient);
         try {
+            final User adminUser = userRepository.findByEmail(AdminUserInitializer.ADMIN_USERNAME).get();
             emailService.sendWelcomeEMail(request.getEmail(), request.getFirstName());
+            notificationService.sendNotification(adminUser.getId(), "admin.patient.registered", new Object[]{request.getFirstName()});
         } catch (MessagingException e) {
             LOGGER.error("Failed to send welcome mail", e);
         }
@@ -103,7 +107,9 @@ public class AuthService {
         doctor.setQualification(request.getQualification());
         doctor = doctorRepository.save(doctor);
         try {
+            final User adminUser = userRepository.findByEmail(AdminUserInitializer.ADMIN_USERNAME).get();
             emailService.sendWelcomeEMail(request.getEmail(), request.getFirstName());
+            notificationService.sendNotification(adminUser.getId(), "admin.doctor.registered", new Object[]{request.getFirstName()});
         } catch (MessagingException e) {
             LOGGER.error("Failed to send welcome mail", e);
         }

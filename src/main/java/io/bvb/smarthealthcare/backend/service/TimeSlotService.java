@@ -4,7 +4,6 @@ import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,9 +50,5 @@ public class TimeSlotService {
             current = current.plusMinutes(duration);
         }
         return timeSlotRepository.saveAll(timeSlots);
-    }
-
-    public List<TimeSlot> getTimeSlotsByDoctor(Long doctorId) {
-        return timeSlotRepository.findByDoctorId(doctorId);
     }
 }

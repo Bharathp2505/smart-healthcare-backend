@@ -6,9 +6,9 @@ import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
 import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
-import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.model.DoctorResponse;
 import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
+import io.bvb.smarthealthcare.backend.model.TimeSlotResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,28 +67,30 @@ public class DoctorService {
 
     @Transactional
     public void deleteDoctor(Long id) {
-        final Doctor doctor = getDoctor(id);
+        final Doctor doctor = getDoctorById(id);
         doctor.setDeleted(Boolean.TRUE);
         doctorRepository.save(doctor);
     }
 
-    public Doctor getDoctor(Long id) {
-       return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
-                .orElseThrow(() -> new DoctorNotFoundException(id));
+    public DoctorResponse getDoctor(Long id) {
+        return convertDoctorToResponse(getDoctorById(id));
     }
 
     public List<Appointment> getTodaysAppointments(Long doctorId) {
-        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
+        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
         return appointments;
     }
 
     @Transactional
-    public List<TimeSlot> allocateTimeSlot(TimeSlotRequest request) {
+    public TimeSlotResponse allocateTimeSlot(TimeSlotRequest request) {
+        if (LocalDate.now().isAfter(request.getDate())) {
+            throw new IllegalArgumentException("Invalid date format");
+        }
         if (request.getDuration() <= 0 || request.getDuration() > 60) {
             throw new IllegalArgumentException("Invalid slot duration. Must be between 1 and 60 minutes.");
         }
 
-        Doctor doctor = getDoctor(request.getDoctorId());
+        Doctor doctor = getDoctorById(request.getDoctorId());
 
         List<TimeSlot> timeSlots = new ArrayList<>();
         LocalTime current = request.getStartTime();
@@ -106,15 +107,39 @@ public class DoctorService {
             timeSlot.setDuration(request.getDuration());
             timeSlot.setClinicName(request.getClinicName());
             timeSlots.add(timeSlot);
-
             current = current.plusMinutes(request.getDuration());
         }
-
-        return timeSlotRepository.saveAll(timeSlots);
+        timeSlotRepository.saveAll(timeSlots);
+        return getTimeSlotsByDoctorId(doctor.getId());
     }
 
-    public List<Doctor> searchDoctors(String searchString) {
-        return doctorRepository.findByClinicNameOrSpecializationContainingIgnoreCase(searchString, searchString);
+    public TimeSlotResponse getTimeSlotsByDoctorId(Long doctorId) {
+        final Doctor doctor = getDoctorById(doctorId);
+        final List<TimeSlot> timeSlots = timeSlotRepository.findByDoctorId(doctorId);
+        final TimeSlotResponse timeSlotResponse = new TimeSlotResponse();
+        timeSlotResponse.setDoctorId(doctorId);
+        timeSlotResponse.setSpecialization(doctor.getSpecialization());
+        timeSlotResponse.setFirstName(doctor.getFirstName());
+        timeSlotResponse.setLastName(doctor.getLastName());
+        timeSlotResponse.setTimeSlots(this.convertTimeSlotsToResponse(timeSlots));
+        return timeSlotResponse;
+    }
+
+    private List<io.bvb.smarthealthcare.backend.model.TimeSlot> convertTimeSlotsToResponse(List<TimeSlot> timeSlots) {
+        return timeSlots.stream().map(timeSlot -> {
+            final io.bvb.smarthealthcare.backend.model.TimeSlot timeSlot1 = new io.bvb.smarthealthcare.backend.model.TimeSlot();
+            timeSlot1.setId(timeSlot.getId());
+            timeSlot1.setStartTime(timeSlot.getStartTime());
+            timeSlot1.setEndTime(timeSlot.getEndTime());
+            timeSlot1.setBooked(timeSlot.isBooked());
+            timeSlot1.setDate(timeSlot.getDate());
+            return timeSlot1;
+        }).collect(Collectors.toList());
+    }
+
+
+    public List<DoctorResponse> searchDoctorsByClinicNameOrSpecialization(String searchString) {
+        return convertDoctorsToResponse(doctorRepository.findByClinicNameOrSpecializationContainingIgnoreCase(searchString, searchString));
     }
 
     public List<DoctorResponse> listDoctors(DoctorStatus doctorStatus) {
@@ -122,5 +147,10 @@ public class DoctorService {
             return convertDoctorsToResponse(doctorRepository.findDoctorsByStatusAndDeleted(doctorStatus, Boolean.FALSE));
         }
         return listDoctors();
+    }
+
+    private Doctor getDoctorById(Long id) {
+        return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
+                .orElseThrow(() -> new DoctorNotFoundException(id));
     }
 }
