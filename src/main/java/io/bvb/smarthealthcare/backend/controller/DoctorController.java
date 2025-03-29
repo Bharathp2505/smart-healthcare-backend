@@ -2,12 +2,10 @@ package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
-import io.bvb.smarthealthcare.backend.model.DoctorResponse;
-import io.bvb.smarthealthcare.backend.model.StringResponse;
-import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
-import io.bvb.smarthealthcare.backend.model.TimeSlotResponse;
+import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.service.DoctorService;
 import io.bvb.smarthealthcare.backend.service.TimeSlotService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +45,8 @@ public class DoctorController {
     }
 
     @GetMapping("/todays-appointments")
-    public List<Appointment> getTodaysAppointments(@RequestParam Long doctorId) {
-        return doctorService.getTodaysAppointments(doctorId);
+    public List<Appointment> getTodaysAppointments(final HttpSession httpSession) {
+        return doctorService.getTodaysAppointments(((UserResponse) httpSession.getAttribute("user")).getId());
     }
 
     @PostMapping("/allocate-timeslots")
