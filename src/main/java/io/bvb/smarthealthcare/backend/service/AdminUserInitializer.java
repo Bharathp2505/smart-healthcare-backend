@@ -10,11 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class AdminUserInitializer implements CommandLineRunner {
-    private static final String ADMIN_USERNAME = "admin@example.com";
-    private static final String ADMIN_PASSWORD = "admin@123";
+    public static final String ADMIN_USERNAME = "admin@example.com";
+    private static final String ADMIN_PASSWORD = "Admin@123";
 
     @Autowired
     private UserRepository userRepository;
@@ -33,11 +34,18 @@ public class AdminUserInitializer implements CommandLineRunner {
             admin.setLastName("");
             admin.setGender(Gender.OTHER);
             admin.setPhoneNumber("5555555555");
-            admin.setDateOfBirth(new Date(2000/10/19));
+            admin.setDateOfBirth(new Date(2000 / 10 / 19));
             admin.setRole(Role.ADMIN);
             userRepository.save(admin);
             System.out.println("Admin user created!");
         } else {
+            final Optional<User> adminUser = userRepository.findByEmail(ADMIN_USERNAME);
+            adminUser.ifPresent(user -> {
+                user.setPassword(passwordEncoder.encode(ADMIN_PASSWORD));
+                user.setEmail(ADMIN_USERNAME);
+                userRepository.save(user);
+                System.out.println("Admin user updated!");
+            });
             System.out.println("Admin user already exists.");
         }
     }

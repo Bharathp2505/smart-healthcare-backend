@@ -1,5 +1,13 @@
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bnjreddy928@gmail.com
+    password: qdbx avyc xpqz ksmd
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
   application:
     name: smart-healthcare-backend
   datasource:
@@ -20,3 +28,8 @@ spring:
           http-only: true
 debug: false
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

@@ -1,24 +1,32 @@
 package io.bvb.smarthealthcare.backend.service;
 
-import io.bvb.smarthealthcare.backend.entity.Doctor;
-import io.bvb.smarthealthcare.backend.entity.Patient;
-import io.bvb.smarthealthcare.backend.entity.Role;
-import io.bvb.smarthealthcare.backend.entity.User;
+import io.bvb.smarthealthcare.backend.constant.LoginUserType;
+import io.bvb.smarthealthcare.backend.entity.*;
 import io.bvb.smarthealthcare.backend.exception.AlreadyRegisteredException;
-import io.bvb.smarthealthcare.backend.model.DoctorRequest;
-import io.bvb.smarthealthcare.backend.model.LoginRequest;
-import io.bvb.smarthealthcare.backend.model.PatientRequest;
+import io.bvb.smarthealthcare.backend.exception.ApplicationException;
+import io.bvb.smarthealthcare.backend.exception.InvalidCredentialsException;
+import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
+import io.bvb.smarthealthcare.backend.repository.PasswordResetTokenRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -28,12 +36,22 @@ public class AuthService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityContextRepository contextRepository;
+    private final EmailService emailService;
+    private final ResetPasswordService resetPasswordService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final NotificationService notificationService;
 
-    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository, EmailService emailService, ResetPasswordService resetPasswordService, PasswordResetTokenRepository passwordResetTokenRepository, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.passwordEncoder = passwordEncoder;
+        this.contextRepository = contextRepository;
+        this.emailService = emailService;
+        this.resetPasswordService = resetPasswordService;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.notificationService = notificationService;
     }
 
     public void registerPatient(PatientRequest request) {
@@ -57,6 +75,13 @@ public class AuthService {
         patient.setPreConditions(request.getPreConditions());
         patient.setEmergencyNumber(request.getEmergencyNumber());
         patient = patientRepository.save(patient);
+        try {
+            final User adminUser = userRepository.findByEmail(AdminUserInitializer.ADMIN_USERNAME).get();
+            emailService.sendWelcomeEMail(request.getEmail(), request.getFirstName());
+            notificationService.sendNotification(adminUser.getId(), "admin.patient.registered", new Object[]{request.getFirstName()});
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send welcome mail", e);
+        }
         LOGGER.info("Patient registered successfully" + patient.getId());
     }
 
@@ -81,6 +106,13 @@ public class AuthService {
         doctor.setClinicName(request.getClinicName());
         doctor.setQualification(request.getQualification());
         doctor = doctorRepository.save(doctor);
+        try {
+            final User adminUser = userRepository.findByEmail(AdminUserInitializer.ADMIN_USERNAME).get();
+            emailService.sendWelcomeEMail(request.getEmail(), request.getFirstName());
+            notificationService.sendNotification(adminUser.getId(), "admin.doctor.registered", new Object[]{request.getFirstName()});
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send welcome mail", e);
+        }
         LOGGER.info("Doctor registered successfully" + doctor.getId());
     }
 
@@ -97,23 +129,78 @@ public class AuthService {
     }
 
     private void verifyLicenseNumberExists(String licenseNumber) {
-        if (userRepository.existsByPhoneNumber(licenseNumber)) {
+        if (doctorRepository.existsByLicenseNumber(licenseNumber)) {
             throw new AlreadyRegisteredException("License Number", licenseNumber);
         }
     }
 
-    public ResponseEntity<String> login(LoginRequest request, HttpServletRequest httpRequest) {
+    public UserResponse login(LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getEmail());
         if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
-            return ResponseEntity.badRequest().body("Invalid credentials");
+            LOGGER.error("Invalid Credentials : {}", request.getEmail());
+            throw new InvalidCredentialsException();
         }
 
-        httpRequest.getSession().setAttribute("user", userOptional.get());
-        return ResponseEntity.ok("Login successful");
+        User user = userOptional.get();
+
+        // Create Authentication object
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
+
+        // Populate SecurityContextHolder
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+
+        // Store the SecurityContext in session for subsequent requests
+        SecurityContextHolder.setContext(securityContext);
+        contextRepository.saveContext(securityContext, httpRequest, httpResponse);
+
+        final UserResponse userResponse = mapUserToUserResponse(user);
+        // Set session attribute
+        httpRequest.getSession().setAttribute("user", userResponse);
+        return userResponse;
     }
 
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    private UserResponse mapUserToUserResponse(User user) {
+        final UserResponse userResponse = new UserResponse();
+        userResponse.setEmail(user.getEmail());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setDateOfBirth(user.getDateOfBirth());
+        userResponse.setGender(user.getGender());
+        userResponse.setId(user.getId());
+        userResponse.setPhoneNumber(user.getPhoneNumber());
+        userResponse.setUserType(LoginUserType.getUserType(user.getRole()));
+        return userResponse;
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextHolder.clearContext();
         request.getSession().invalidate();
-        return ResponseEntity.ok("Logout successful");
+    }
+
+    public void forgotPassword(final ResetPassword resetPassword) {
+        final User user = userRepository.findByEmail(resetPassword.getEmail()).orElseThrow(() -> new ApplicationException(String.format("%s is not found.", resetPassword.getEmail())));
+        if (Role.ADMIN.equals(user.getRole())) {
+            throw new ApplicationException("Admin cannot change the password.");
+        }
+        resetPasswordService.generateResetToken(resetPassword.getEmail(), user.getFirstName());
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ApplicationException("Invalid or expired token"));
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new ApplicationException("Token expired");
+        }
+
+        User user = userRepository.findByEmail(resetToken.getEmail())
+                .orElseThrow(() -> new ApplicationException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        passwordResetTokenRepository.deleteByEmail(resetToken.getEmail());
     }
 }

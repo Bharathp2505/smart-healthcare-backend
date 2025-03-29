@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-
     private final AdminService adminService;
 
-    public AdminController(AdminService adminService) {
+    public AdminController(final AdminService adminService) {
         this.adminService = adminService;
     }
 

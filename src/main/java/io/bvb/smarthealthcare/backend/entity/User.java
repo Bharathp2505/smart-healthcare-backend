@@ -36,4 +36,7 @@ public class User {
     private Gender gender;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private boolean deleted = Boolean.FALSE;
+    @Version
+    private long version;
 }

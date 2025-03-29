@@ -2,8 +2,8 @@ package io.bvb.smarthealthcare.backend.service;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
+import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.InvalidDataException;
-import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +15,18 @@ import java.util.Optional;
 public class AdminService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminService.class);
     private final DoctorRepository doctorRepository;
+    private final NotificationService notificationService;
 
-    public AdminService(DoctorRepository doctorRepository) {
+    public AdminService(DoctorRepository doctorRepository, NotificationService notificationService) {
         this.doctorRepository = doctorRepository;
+        this.notificationService = notificationService;
     }
 
     public void approveDoctor(Long doctorId) {
         Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
         if (doctorOptional.isEmpty()) {
             LOGGER.error("Doctor not found : {}", doctorId);
-            throw new UserNotFoundException(String.valueOf(doctorId));
+            throw new DoctorNotFoundException(doctorId);
         }
         Doctor doctor = doctorOptional.get();
         if (doctor.getStatus() != DoctorStatus.PENDING) {
@@ -33,6 +35,7 @@ public class AdminService {
         }
         doctor.setStatus(DoctorStatus.APPROVED);
         doctorRepository.save(doctor);
+        notificationService.sendNotification(doctorId, "doctor.approved", new Object[]{doctor.getFirstName()});
         LOGGER.info("Doctor approved successfully : Id : {}, Email : {}", doctorId, doctor.getEmail());
     }
 
@@ -40,7 +43,7 @@ public class AdminService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
         if (doctorOptional.isEmpty()) {
             LOGGER.error("Doctor not found : {}", doctorId);
-            throw new UserNotFoundException(String.valueOf(doctorId));
+            throw new DoctorNotFoundException(doctorId);
         }
 
         Doctor doctor = doctorOptional.get();
@@ -51,6 +54,7 @@ public class AdminService {
 
         doctor.setStatus(DoctorStatus.REJECTED);
         doctorRepository.save(doctor);
+        notificationService.sendNotification(doctorId, "doctor.rejected", new Object[]{doctor.getFirstName()});
         LOGGER.info("Doctor rejected successfully. Id : {}, Email : {}", doctorId, doctor.getEmail());
     }
 }

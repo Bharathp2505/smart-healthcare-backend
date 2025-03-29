@@ -1,6 +1,8 @@
 package io.bvb.smarthealthcare.backend.exception.handler;
 
 import io.bvb.smarthealthcare.backend.exception.ApplicationException;
+import io.bvb.smarthealthcare.backend.exception.PermissionDeniedException;
+import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.model.ErrorMessage;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,22 @@ public class GlobalExceptionHandler {
         errorMessage.setMessage(applicationException.getMessage());
         errorMessage.setStatus(HttpStatus.BAD_REQUEST);
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleUserNotFoundException(UserNotFoundException userNotFoundException) {
+        final ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setMessage(userNotFoundException.getMessage());
+        errorMessage.setStatus(HttpStatus.NOT_FOUND);
+        return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseEntity<ErrorMessage> handlePermissionDeniedException(PermissionDeniedException permissionDeniedException) {
+        final ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setMessage(permissionDeniedException.getMessage());
+        errorMessage.setStatus(HttpStatus.FORBIDDEN);
+        return new ResponseEntity(errorMessage, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
