@@ -64,7 +64,7 @@ public class PatientService {
         return ResponseEntity.ok(appointments);
     }
 
-    private Patient getPatientById(Long id) {
+    public Patient getPatientById(Long id) {
         return patientRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new PatientNotFoundException(id));
     }

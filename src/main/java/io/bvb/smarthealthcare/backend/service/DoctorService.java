@@ -77,7 +77,7 @@ public class DoctorService {
     }
 
     public List<Appointment> getTodaysAppointments(Long doctorId) {
-        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(doctorId, LocalDate.now());
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByDoctorIdAndDate(doctorId, LocalDate.now());
         return appointments;
     }
 
@@ -89,7 +89,6 @@ public class DoctorService {
         if (request.getDuration() <= 0 || request.getDuration() > 60) {
             throw new IllegalArgumentException("Invalid slot duration. Must be between 1 and 60 minutes.");
         }
-
         Doctor doctor = getDoctorById(request.getDoctorId());
 
         List<TimeSlot> timeSlots = new ArrayList<>();
@@ -149,7 +148,7 @@ public class DoctorService {
         return listDoctors();
     }
 
-    private Doctor getDoctorById(Long id) {
+    public Doctor getDoctorById(Long id) {
         return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new DoctorNotFoundException(id));
     }
