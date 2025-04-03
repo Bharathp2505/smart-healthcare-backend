@@ -154,24 +154,13 @@ public class AuthService {
         SecurityContextHolder.setContext(securityContext);
         contextRepository.saveContext(securityContext, httpRequest, httpResponse);
 
-        final UserResponse userResponse = mapUserToUserResponse(user);
+        final UserResponse userResponse = UserResponse.mapUserToUserResponse(user);
         // Set session attribute
         httpRequest.getSession().setAttribute("user", userResponse);
         return userResponse;
     }
 
-    private UserResponse mapUserToUserResponse(User user) {
-        final UserResponse userResponse = new UserResponse();
-        userResponse.setEmail(user.getEmail());
-        userResponse.setFirstName(user.getFirstName());
-        userResponse.setLastName(user.getLastName());
-        userResponse.setDateOfBirth(user.getDateOfBirth());
-        userResponse.setGender(user.getGender());
-        userResponse.setId(user.getId());
-        userResponse.setPhoneNumber(user.getPhoneNumber());
-        userResponse.setUserType(LoginUserType.getUserType(user.getRole()));
-        return userResponse;
-    }
+
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextHolder.clearContext();
