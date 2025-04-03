@@ -14,7 +14,6 @@ public class UserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // Read the user ID from the session
         final Object userResponse = request.getSession().getAttribute("user");
-
         if (userResponse instanceof UserResponse) {
             CurrentUserData.setUser((UserResponse) userResponse);
         }
