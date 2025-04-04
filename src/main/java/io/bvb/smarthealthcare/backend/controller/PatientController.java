@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/patients")
 public class PatientController {
-
     private final PatientService patientService;
 
     public PatientController(PatientService patientService) {
@@ -40,7 +39,7 @@ public class PatientController {
 
     @PostMapping("/book-appointment")
     public ResponseEntity<String> bookAppointment(@Valid @RequestBody AppointmentRequest request) {
-        return patientService.bookAppointment(request);
+        return ResponseEntity.ok(patientService.bookAppointment(request));
     }
 
     @GetMapping("/upcoming-appointments")

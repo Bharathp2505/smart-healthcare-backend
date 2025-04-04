@@ -1,8 +1,8 @@
 package io.bvb.smarthealthcare.backend.exception.handler;
 
 import io.bvb.smarthealthcare.backend.exception.ApplicationException;
+import io.bvb.smarthealthcare.backend.exception.NotFoundException;
 import io.bvb.smarthealthcare.backend.exception.PermissionDeniedException;
-import io.bvb.smarthealthcare.backend.exception.UserNotFoundException;
 import io.bvb.smarthealthcare.backend.model.ErrorMessage;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleUserNotFoundException(UserNotFoundException userNotFoundException) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleUserNotFoundException(NotFoundException userNotFoundException) {
         final ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setMessage(userNotFoundException.getMessage());
         errorMessage.setStatus(HttpStatus.NOT_FOUND);
