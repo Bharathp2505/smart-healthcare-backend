@@ -136,7 +136,7 @@ public class DoctorService {
             timeSlot1.setEndTime(timeSlot.getEndTime());
             timeSlot1.setBooked(timeSlot.isBooked());
             timeSlot1.setDate(timeSlot.getDate());
-            return timeSlot1;d .
+            return timeSlot1;
         }).sorted(Comparator.comparing(io.bvb.smarthealthcare.backend.model.TimeSlot::getStartTime)).collect(Collectors.toList());
     }
 
