@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,5 +53,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<ErrorMessage> handleDateTimeParseException(final DateTimeParseException dateTimeParseException) {
+        final ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setMessage(dateTimeParseException.getMessage());
+        errorMessage.setStatus(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

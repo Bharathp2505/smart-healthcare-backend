@@ -23,10 +23,8 @@ public class TimeSlotRequest {
     @FutureOrPresent
     private LocalDate date;
     @NotNull
-    @FutureOrPresent
     private LocalTime startTime;
     @NotNull
-    @Future
     private LocalTime endTime;
     private Integer duration = 60;
     @NotBlank
