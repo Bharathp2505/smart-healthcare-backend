@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,8 +136,8 @@ public class DoctorService {
             timeSlot1.setEndTime(timeSlot.getEndTime());
             timeSlot1.setBooked(timeSlot.isBooked());
             timeSlot1.setDate(timeSlot.getDate());
-            return timeSlot1;
-        }).collect(Collectors.toList());
+            return timeSlot1;d .
+        }).sorted(Comparator.comparing(io.bvb.smarthealthcare.backend.model.TimeSlot::getStartTime)).collect(Collectors.toList());
     }
 
 
