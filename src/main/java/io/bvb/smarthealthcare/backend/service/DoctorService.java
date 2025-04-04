@@ -9,9 +9,11 @@ import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.model.DoctorResponse;
 import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
 import io.bvb.smarthealthcare.backend.model.TimeSlotResponse;
+import io.bvb.smarthealthcare.backend.model.UserResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
+import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -83,19 +85,20 @@ public class DoctorService {
 
     @Transactional
     public TimeSlotResponse allocateTimeSlot(TimeSlotRequest request) {
+        final UserResponse userResponse = CurrentUserData.getUser();
         if (LocalDate.now().isAfter(request.getDate())) {
             throw new IllegalArgumentException("Invalid date format");
         }
         if (request.getDuration() <= 0 || request.getDuration() > 60) {
             throw new IllegalArgumentException("Invalid slot duration. Must be between 1 and 60 minutes.");
         }
-        Doctor doctor = getDoctorById(request.getDoctorId());
+        Doctor doctor = getDoctorById(userResponse.getId());
 
         List<TimeSlot> timeSlots = new ArrayList<>();
         LocalTime current = request.getStartTime();
 
         while (current.plusMinutes(request.getDuration()).isBefore(request.getEndTime()) || current.plusMinutes(request.getDuration()).equals(request.getEndTime())) {
-            if (timeSlotRepository.existsByDoctorIdAndDateAndStartTime(request.getDoctorId(), request.getDate(), current)) {
+            if (timeSlotRepository.existsByDoctorIdAndDateAndStartTime(userResponse.getId(), request.getDate(), current)) {
                 throw new RuntimeException("Time slot already allocated at " + current);
             }
             TimeSlot timeSlot = new TimeSlot();
