@@ -11,6 +11,7 @@ import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
+import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +63,10 @@ public class PatientService {
         timeSlotRepository.save(timeSlot);
 
         Appointment appointment = new Appointment();
-        appointment.setPatient(patientRepository.findById(appointmentRequest.getPatientId())
-                .orElseThrow(() -> new PatientNotFoundException(appointmentRequest.getPatientId())));
+        appointment.setPatient(patientRepository.findById(CurrentUserData.getUser().getId())
+                .orElseThrow(() -> {
+                    LOGGER.error("Patient not found : {}", CurrentUserData.getUser().getId());
+                    throw new PatientNotFoundException(CurrentUserData.getUser().getId());}));
         appointment.setTimeSlot(timeSlot);
 
         appointmentRepository.save(appointment);

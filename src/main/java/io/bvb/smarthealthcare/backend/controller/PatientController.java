@@ -38,8 +38,8 @@ public class PatientController {
     }
 
     @PostMapping("/book-appointment")
-    public ResponseEntity<String> bookAppointment(@Valid @RequestBody AppointmentRequest request) {
-        return ResponseEntity.ok(patientService.bookAppointment(request));
+    public ResponseEntity<StringResponse> bookAppointment(@Valid @RequestBody AppointmentRequest request) {
+        return ResponseEntity.ok(new StringResponse(patientService.bookAppointment(request)));
     }
 
     @GetMapping("/upcoming-appointments")
