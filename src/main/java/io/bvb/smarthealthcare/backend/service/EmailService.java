@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +58,49 @@ public class EmailService {
         helper.setFrom(fromAddress);
         mailSender.send(message);
     }
+
+
+    public void sendDoctorApprovalEmail(String toEmail, String name) {
+        Context context = new Context();
+        context.setVariable("name", name);
+
+        String body = templateEngine.process("approval-template.html", context);
+
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+            helper.setTo(toEmail);
+            helper.setSubject("Doctor Registration Approved");
+            helper.setFrom(fromAddress);
+            helper.setText(body, true);
+
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
+
+    public void sendRejectionMail(String toEmail, String username) {
+        Context context = new Context();
+        context.setVariable("username", username);
+        String htmlContent = templateEngine.process("doctor_rejection_mail.html", context);
+
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true,"UTF-8");
+            helper.setTo(toEmail);
+            helper.setSubject("Doctor Registration Rejected");
+            helper.setText(htmlContent, true);
+            helper.setFrom(fromAddress);
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
+
 }
 
 
