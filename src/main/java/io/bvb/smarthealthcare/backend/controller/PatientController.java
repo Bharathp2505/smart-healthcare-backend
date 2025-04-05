@@ -2,9 +2,11 @@ package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.model.AppointmentRequest;
+import io.bvb.smarthealthcare.backend.model.AppointmentResponse;
 import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.model.StringResponse;
 import io.bvb.smarthealthcare.backend.service.PatientService;
+import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +40,17 @@ public class PatientController {
     }
 
     @PostMapping("/book-appointment")
-    public ResponseEntity<StringResponse> bookAppointment(@Valid @RequestBody AppointmentRequest request) {
-        return ResponseEntity.ok(new StringResponse(patientService.bookAppointment(request)));
+    public ResponseEntity<AppointmentResponse> bookAppointment(@Valid @RequestBody AppointmentRequest request) {
+        return ResponseEntity.ok(patientService.bookAppointment(request));
+    }
+
+    @DeleteMapping("/cancel-appointment/{appointmentId}")
+    public StringResponse cancelAppointment(@PathVariable String appointmentId) {
+        return new StringResponse(patientService.cancelAppointment(appointmentId));
     }
 
     @GetMapping("/upcoming-appointments")
-    public ResponseEntity<List<Appointment>> getUpcomingAppointments(@RequestParam Long patientId) {
-        return patientService.getUpcomingAppointments(patientId);
+    public List<Appointment> getUpcomingAppointments() {
+        return patientService.getUpcomingAppointments();
     }
 }

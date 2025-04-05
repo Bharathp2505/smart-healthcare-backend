@@ -4,6 +4,9 @@ import io.bvb.smarthealthcare.backend.constant.MaritalStatus;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import lombok.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,5 +39,9 @@ public class PatientResponse extends UserResponse {
         patientResponse.setMaritalStatus(patient.getMaritalStatus());
         patientResponse.setPreConditions(patient.getPreConditions());
         return patientResponse;
+    }
+
+    public static List<PatientResponse> convertPatientsToPatientResponses(List<Patient> patients) {
+        return patients.stream().map(PatientResponse::convertPatientToPatientResponse).collect(Collectors.toList());
     }
 }

@@ -3,10 +3,12 @@ package io.bvb.smarthealthcare.backend.service;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
+import io.bvb.smarthealthcare.backend.exception.AppointmentNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.PatientNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.TimeSlotNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.TimeSlotOccupiedException;
 import io.bvb.smarthealthcare.backend.model.AppointmentRequest;
+import io.bvb.smarthealthcare.backend.model.AppointmentResponse;
 import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +38,7 @@ public class PatientService {
     }
 
     public List<PatientResponse> listPatients() {
-        return convertPatientToPatientResponses(patientRepository.findAllByDeleted(Boolean.FALSE));
+        return PatientResponse.convertPatientsToPatientResponses(patientRepository.findAllByDeleted(Boolean.FALSE));
     }
 
     public PatientResponse getPatient(Long id) {
@@ -49,11 +52,11 @@ public class PatientService {
         patientRepository.save(patient);
     }
 
-    public String bookAppointment(final AppointmentRequest appointmentRequest) {
+    public AppointmentResponse bookAppointment(final AppointmentRequest appointmentRequest) {
         TimeSlot timeSlot = timeSlotRepository.findById(appointmentRequest.getTimeSlotId())
                 .orElseThrow(() -> {
                     LOGGER.error("Time slot not found : {}", appointmentRequest.getTimeSlotId() );
-                    throw new TimeSlotNotFoundException(appointmentRequest.getTimeSlotId());
+                    return new TimeSlotNotFoundException(appointmentRequest.getTimeSlotId());
                 });
         if (timeSlot.isBooked()) {
             LOGGER.error("Timeslot is already booked :: TimeSlot Id : {}", appointmentRequest.getTimeSlotId());
@@ -66,24 +69,32 @@ public class PatientService {
         appointment.setPatient(patientRepository.findById(CurrentUserData.getUser().getId())
                 .orElseThrow(() -> {
                     LOGGER.error("Patient not found : {}", CurrentUserData.getUser().getId());
-                    throw new PatientNotFoundException(CurrentUserData.getUser().getId());}));
+                    return new PatientNotFoundException(CurrentUserData.getUser().getId());
+                }));
         appointment.setTimeSlot(timeSlot);
 
-        appointmentRepository.save(appointment);
-        return "Appointment booked successfully.";
+        final Appointment savedAppointment = appointmentRepository.save(appointment);
+        return new AppointmentResponse(savedAppointment.getId());
     }
 
-    public ResponseEntity<List<Appointment>> getUpcomingAppointments(Long patientId) {
-        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(patientId, LocalDate.now());
-        return ResponseEntity.ok(appointments);
+    public String cancelAppointment(String appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
+
+        TimeSlot timeSlot = appointment.getTimeSlot();
+        timeSlot.setBooked(false);
+        timeSlotRepository.save(timeSlot);
+        appointment.setCancelled(true);
+        appointmentRepository.saveAndFlush(appointment);
+        return "Appointment canceled successfully.";
+    }
+
+    public List<Appointment> getUpcomingAppointments() {
+        return appointmentRepository.findUpcomingAppointments(CurrentUserData.getUser().getId(), LocalDate.now());
     }
 
     public Patient getPatientById(Long id) {
         return patientRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new PatientNotFoundException(id));
-    }
-
-    private List<PatientResponse> convertPatientToPatientResponses(List<Patient> patients) {
-        return patients.stream().map(PatientResponse::convertPatientToPatientResponse).collect(Collectors.toList());
     }
 }

@@ -24,5 +24,7 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
+
+    private boolean isCancelled = false;
 }
 
