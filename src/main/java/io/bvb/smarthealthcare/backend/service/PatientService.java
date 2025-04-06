@@ -89,7 +89,7 @@ public class PatientService {
 
         TimeSlot timeSlot = appointment.getTimeSlot();
         timeSlot.setBooked(false);
-        timeSlotRepository.save(timeSlot);
+        timeSlotRepository.saveAndFlush(timeSlot);
         appointment.setCancelled(true);
         appointmentRepository.saveAndFlush(appointment);
         try {
