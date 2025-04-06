@@ -30,7 +30,7 @@ public class ResetPasswordService {
         tokenRepository.save(resetToken);
 
         // Generate Reset Link
-        String resetLink = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        String resetLink = "http://localhost:3000/api/auth/reset-password?token=" + token;
         // Send Email
         try {
             emailService.sendResetPasswordEmail(email, firstName, resetLink);
