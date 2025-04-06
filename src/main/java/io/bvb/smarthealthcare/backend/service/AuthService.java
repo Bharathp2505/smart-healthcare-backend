@@ -1,9 +1,10 @@
 package io.bvb.smarthealthcare.backend.service;
 
-import io.bvb.smarthealthcare.backend.constant.LoginUserType;
+import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.*;
 import io.bvb.smarthealthcare.backend.exception.AlreadyRegisteredException;
 import io.bvb.smarthealthcare.backend.exception.ApplicationException;
+import io.bvb.smarthealthcare.backend.exception.DoctorNotApprovedException;
 import io.bvb.smarthealthcare.backend.exception.InvalidCredentialsException;
 import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
@@ -140,9 +141,24 @@ public class AuthService {
             LOGGER.error("Invalid Credentials : {}", request.getEmail());
             throw new InvalidCredentialsException();
         }
-
-        User user = userOptional.get();
-
+        final User user = userOptional.get();
+        UserResponse userResponse = null;
+        if (Role.PATIENT.equals(user.getRole())) {
+            final Patient patient = patientRepository.findById(user.getId()).get();
+            userResponse = PatientResponse.convertPatientToPatientResponse(patient);
+            httpRequest.getSession().setAttribute("user", userResponse);
+        } else if (Role.DOCTOR.equals(user.getRole())) {
+            final Doctor doctor = doctorRepository.findById(user.getId()).get();
+            if (DoctorStatus.PENDING.equals(doctor.getStatus())) {
+                LOGGER.error("Doctor account is pending approval :: Doctor email : {}", doctor.getEmail());
+                throw new DoctorNotApprovedException();
+            }
+            userResponse = DoctorResponse.convertDoctorToResponse(doctor);
+            httpRequest.getSession().setAttribute("user", userResponse);
+        } else {
+            userResponse = UserResponse.mapUserToUserResponse(user);
+            httpRequest.getSession().setAttribute("user", userResponse);
+        }
         // Create Authentication object
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
 
@@ -153,20 +169,6 @@ public class AuthService {
         // Store the SecurityContext in session for subsequent requests
         SecurityContextHolder.setContext(securityContext);
         contextRepository.saveContext(securityContext, httpRequest, httpResponse);
-
-        UserResponse userResponse = null;
-        if (Role.PATIENT.equals(user.getRole())) {
-            final Patient patient = patientRepository.findById(user.getId()).get();
-            userResponse = PatientResponse.convertPatientToPatientResponse(patient);
-            httpRequest.getSession().setAttribute("user", userResponse);
-        } else if (Role.DOCTOR.equals(user.getRole())) {
-            final Doctor patient = doctorRepository.findById(user.getId()).get();
-            userResponse = DoctorResponse.convertDoctorToResponse(patient);
-            httpRequest.getSession().setAttribute("user", userResponse);
-        } else {
-            userResponse = UserResponse.mapUserToUserResponse(user);
-            httpRequest.getSession().setAttribute("user", userResponse);
-        }
         return userResponse;
     }
 

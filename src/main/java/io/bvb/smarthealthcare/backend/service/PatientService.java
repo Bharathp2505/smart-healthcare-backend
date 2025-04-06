@@ -14,15 +14,14 @@ import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
 import io.bvb.smarthealthcare.backend.util.CurrentUserData;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -30,11 +29,13 @@ public class PatientService {
     private final AppointmentRepository appointmentRepository;
     private final TimeSlotRepository timeSlotRepository;
     private final PatientRepository patientRepository;
+    private final EmailService emailService;
 
-    public PatientService(AppointmentRepository appointmentRepository, TimeSlotRepository timeSlotRepository, PatientRepository patientRepository) {
+    public PatientService(AppointmentRepository appointmentRepository, TimeSlotRepository timeSlotRepository, PatientRepository patientRepository, EmailService emailService) {
         this.appointmentRepository = appointmentRepository;
         this.timeSlotRepository = timeSlotRepository;
         this.patientRepository = patientRepository;
+        this.emailService = emailService;
     }
 
     public List<PatientResponse> listPatients() {
@@ -74,6 +75,11 @@ public class PatientService {
         appointment.setTimeSlot(timeSlot);
 
         final Appointment savedAppointment = appointmentRepository.save(appointment);
+        try {
+            emailService.sendAppointmentConfirmationmail(appointment.getPatient(), savedAppointment);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
         return new AppointmentResponse(savedAppointment.getId());
     }
 
@@ -83,9 +89,18 @@ public class PatientService {
 
         TimeSlot timeSlot = appointment.getTimeSlot();
         timeSlot.setBooked(false);
-        timeSlotRepository.save(timeSlot);
+        timeSlotRepository.saveAndFlush(timeSlot);
         appointment.setCancelled(true);
         appointmentRepository.saveAndFlush(appointment);
+        try {
+            emailService.sendCancelledByPatientEmails(
+                    appointment.getPatient(),
+                    appointment.getTimeSlot().getDoctor(),
+                    appointment
+            );
+        } catch (MessagingException e) {
+            throw new RuntimeException("fail to send mail");
+        }
         return "Appointment canceled successfully.";
     }
 

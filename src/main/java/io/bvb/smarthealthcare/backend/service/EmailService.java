@@ -1,5 +1,9 @@
 package io.bvb.smarthealthcare.backend.service;
 
+import io.bvb.smarthealthcare.backend.entity.Appointment;
+import io.bvb.smarthealthcare.backend.entity.Doctor;
+import io.bvb.smarthealthcare.backend.entity.Patient;
+import io.bvb.smarthealthcare.backend.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -102,6 +106,67 @@ public class EmailService {
             throw new RuntimeException("Failed to send email", e);
         }
     }
+
+    public void sendAppointmentConfirmationmail(User patient, Appointment appointment) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        Context context = new Context();
+        context.setVariable("patientName", patient.getFirstName());
+        context.setVariable("doctorName", appointment.getTimeSlot().getDoctor().getFirstName());
+        context.setVariable("appointmentDate", appointment.getTimeSlot().getDate().toString());
+        context.setVariable("appointmentTime", appointment.getTimeSlot().getStartTime().toString());
+
+        String htmlContent = templateEngine.process("Appointments/appointment-confirmation.html", context);
+
+        helper.setTo(patient.getEmail());
+        helper.setSubject("Appointment Confirmation");
+        helper.setText(htmlContent, true);
+        helper.setFrom(mailFromAddress);
+
+        mailSender.send(message);
+    }
+
+    public void sendCancelledByPatientEmails(Patient patient, Doctor doctor, Appointment appointment) throws MessagingException {
+        // Patient Email
+        MimeMessage patientMsg = mailSender.createMimeMessage();
+        MimeMessageHelper patientHelper = new MimeMessageHelper(patientMsg, true);
+
+        Context patientContext = new Context();
+        patientContext.setVariable("patientName", appointment.getPatient().getFirstName());
+        patientContext.setVariable("doctorName", appointment.getTimeSlot().getDoctor().getFirstName());
+        patientContext.setVariable("appointmentDate", appointment.getTimeSlot().getDate().toString());
+        patientContext.setVariable("appointmentTime", appointment.getTimeSlot().getStartTime().toString());
+
+        String patientHtml = templateEngine.process("Appointments/cancelled-by-patient-patient.html", patientContext);
+
+        patientHelper.setTo(patient.getEmail());
+        patientHelper.setSubject("Your Appointment Has Been Cancelled");
+        patientHelper.setText(patientHtml, true);
+        patientHelper.setFrom(mailFromAddress);
+
+        mailSender.send(patientMsg);
+
+        // Doctor Email
+        MimeMessage doctorMsg = mailSender.createMimeMessage();
+        MimeMessageHelper doctorHelper = new MimeMessageHelper(doctorMsg, true);
+
+        Context doctorContext = new Context();
+        doctorContext.setVariable("doctorName", appointment.getTimeSlot().getDoctor().getFirstName());
+        doctorContext.setVariable("patientName", appointment.getPatient().getFirstName());
+        doctorContext.setVariable("appointmentDate", appointment.getTimeSlot().getDate().toString());
+        doctorContext.setVariable("appointmentTime", appointment.getTimeSlot().getStartTime().toString());
+
+        String doctorHtml = templateEngine.process("Appointments/cancelled-by-patient-doctor.html", doctorContext);
+
+        doctorHelper.setTo(doctor.getEmail());
+        doctorHelper.setSubject("Appointment Cancelled by Patient");
+        doctorHelper.setText(doctorHtml, true);
+        doctorHelper.setFrom(mailFromAddress);
+
+        mailSender.send(doctorMsg);
+    }
+
 
 }
 
