@@ -1,5 +1,6 @@
 package io.bvb.smarthealthcare.backend.model;
 
+import io.bvb.smarthealthcare.backend.constant.LoginUserType;
 import io.bvb.smarthealthcare.backend.constant.MaritalStatus;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import lombok.*;
@@ -28,6 +29,7 @@ public class PatientResponse extends UserResponse {
         patientResponse.setPhoneNumber(patient.getPhoneNumber());
         patientResponse.setFirstName(patient.getFirstName());
         patientResponse.setLastName(patient.getLastName());
+        patientResponse.setUserType(LoginUserType.PATIENT);
         patientResponse.setGender(patient.getGender());
         patientResponse.setDateOfBirth(patient.getDateOfBirth());
         patientResponse.setAddress(patient.getAddress());
