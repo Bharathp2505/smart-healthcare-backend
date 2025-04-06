@@ -36,7 +36,7 @@ public class NotificationService {
         notification.setUserId(userId);
         notification.setMessage(message);
         notification.setDate(LocalDateTime.now());
-        notification.setRead(Boolean.TRUE);
+        notification.setRead(Boolean.FALSE);
         notificationRepository.save(notification);
     }
 
@@ -47,7 +47,7 @@ public class NotificationService {
 
     public void markReadNotification(String notificationId) {
         final Notification notification = notificationRepository.findById(notificationId).orElseThrow( () -> new NotificationNotFoundException(notificationId));
-        notification.setRead(true);
+        notification.setRead(Boolean.TRUE);
         notificationRepository.save(notification);
     }
 
@@ -58,6 +58,7 @@ public class NotificationService {
             notificationResponse.setUserId(notification.getUserId());
             notificationResponse.setMessage(notification.getMessage());
             notificationResponse.setDate(notification.getDate());
+            notificationResponse.setRead(notification.isRead());
             return notificationResponse;
         }).collect(Collectors.toList());
     }

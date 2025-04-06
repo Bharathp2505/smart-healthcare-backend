@@ -104,6 +104,7 @@ public class DoctorService {
         timeSlotResponse.setSpecialization(doctor.getSpecialization());
         timeSlotResponse.setFirstName(doctor.getFirstName());
         timeSlotResponse.setLastName(doctor.getLastName());
+
         timeSlotResponse.setTimeSlots(this.convertTimeSlotsToResponse(timeSlots));
         return timeSlotResponse;
     }
@@ -115,6 +116,7 @@ public class DoctorService {
             timeSlot1.setStartTime(timeSlot.getStartTime());
             timeSlot1.setEndTime(timeSlot.getEndTime());
             timeSlot1.setBooked(timeSlot.isBooked());
+            timeSlot1.setClinicName(timeSlot.getClinicName());
             timeSlot1.setDate(timeSlot.getDate());
             return timeSlot1;
         }).sorted(Comparator.comparing(io.bvb.smarthealthcare.backend.model.TimeSlot::getStartTime)).collect(Collectors.toList());
