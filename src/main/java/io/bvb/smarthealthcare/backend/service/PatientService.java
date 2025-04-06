@@ -17,13 +17,11 @@ import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -55,7 +53,7 @@ public class PatientService {
         patientRepository.save(patient);
     }
 
-    public AppointmentResponse bookAppointment(final AppointmentRequest appointmentRequest) throws MessagingException {
+    public AppointmentResponse bookAppointment(final AppointmentRequest appointmentRequest) {
         TimeSlot timeSlot = timeSlotRepository.findById(appointmentRequest.getTimeSlotId())
                 .orElseThrow(() -> {
                     LOGGER.error("Time slot not found : {}", appointmentRequest.getTimeSlotId() );
@@ -85,7 +83,7 @@ public class PatientService {
         return new AppointmentResponse(savedAppointment.getId());
     }
 
-    public String cancelAppointment(String appointmentId) throws MessagingException{
+    public String cancelAppointment(String appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
 
