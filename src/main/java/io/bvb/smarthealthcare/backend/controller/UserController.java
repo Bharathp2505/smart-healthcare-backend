@@ -1,6 +1,7 @@
 package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.exception.PermissionDeniedException;
+import io.bvb.smarthealthcare.backend.model.PutAdminRequest;
 import io.bvb.smarthealthcare.backend.model.PutDoctorRequest;
 import io.bvb.smarthealthcare.backend.model.PutPatientRequest;
 import io.bvb.smarthealthcare.backend.model.UserResponse;
@@ -29,6 +30,14 @@ public class UserController {
         }
         return user;
     }
+
+    @PutMapping("/admin")
+    public UserResponse editAdmin(@Valid @RequestBody final PutAdminRequest putAdminRequest, final HttpSession httpSession) {
+        userService.updateAdmin(putAdminRequest);
+        httpSession.setAttribute("user", CurrentUserData.getUser());
+        return CurrentUserData.getUser();
+    }
+
     @PutMapping("/patient")
     public UserResponse editPatient(@Valid @RequestBody PutPatientRequest putPatientRequest, final HttpSession httpSession) {
         userService.updatePatient(putPatientRequest);

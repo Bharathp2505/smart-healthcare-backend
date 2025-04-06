@@ -9,7 +9,5 @@ import lombok.*;
 @Data
 public class AppointmentRequest {
     @NotNull
-    private Long patientId;
-    @NotNull
-    private Long timeSlotId;
+    private String timeSlotId;
 }

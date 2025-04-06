@@ -18,15 +18,11 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class TimeSlotRequest {
     @NotNull
-    private Long doctorId;
-    @NotNull
     @FutureOrPresent
     private LocalDate date;
     @NotNull
-    @FutureOrPresent
     private LocalTime startTime;
     @NotNull
-    @Future
     private LocalTime endTime;
     private Integer duration = 60;
     @NotBlank

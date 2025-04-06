@@ -16,10 +16,12 @@ public class AdminService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminService.class);
     private final DoctorRepository doctorRepository;
     private final NotificationService notificationService;
+    private final EmailService emailService;
 
-    public AdminService(DoctorRepository doctorRepository, NotificationService notificationService) {
+    public AdminService(DoctorRepository doctorRepository, NotificationService notificationService, EmailService emailService) {
         this.doctorRepository = doctorRepository;
         this.notificationService = notificationService;
+        this.emailService = emailService;
     }
 
     public void approveDoctor(Long doctorId) {
@@ -36,6 +38,8 @@ public class AdminService {
         doctor.setStatus(DoctorStatus.APPROVED);
         doctorRepository.save(doctor);
         notificationService.sendNotification(doctorId, "doctor.approved", new Object[]{doctor.getFirstName()});
+        // Send Email after approval
+        emailService.sendDoctorApprovalEmail(doctor.getEmail(), doctor.getFirstName());
         LOGGER.info("Doctor approved successfully : Id : {}, Email : {}", doctorId, doctor.getEmail());
     }
 
@@ -52,8 +56,8 @@ public class AdminService {
             throw new InvalidDataException("Doctor is not in pending state");
         }
 
+        emailService.sendRejectionMail(doctor.getEmail(), doctor.getFirstName());
         doctorRepository.delete(doctor);
-        notificationService.sendNotification(doctorId, "doctor.rejected", new Object[]{doctor.getFirstName()});
         LOGGER.info("Doctor rejected successfully. Id : {}, Email : {}", doctorId, doctor.getEmail());
     }
 }

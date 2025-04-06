@@ -14,4 +14,5 @@ public class NotificationResponse {
     private Long userId;
     private String message;
     private LocalDateTime date;
+    private boolean isRead = false;
 }

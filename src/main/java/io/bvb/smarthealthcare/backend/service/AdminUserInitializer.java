@@ -41,8 +41,7 @@ public class AdminUserInitializer implements CommandLineRunner {
         } else {
             final Optional<User> adminUser = userRepository.findByEmail(ADMIN_USERNAME);
             adminUser.ifPresent(user -> {
-                if (!passwordEncoder.encode(ADMIN_PASSWORD).equals(user.getPassword())) {
-                    user.setPassword(passwordEncoder.encode(ADMIN_PASSWORD));
+                if (!ADMIN_USERNAME.equals(user.getEmail())) {
                     user.setEmail(ADMIN_USERNAME);
                     userRepository.save(user);
                     System.out.println("Admin user updated!");

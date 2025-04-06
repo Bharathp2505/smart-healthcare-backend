@@ -3,21 +3,30 @@ package io.bvb.smarthealthcare.backend.service;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
+import io.bvb.smarthealthcare.backend.exception.AppointmentNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.PatientNotFoundException;
+import io.bvb.smarthealthcare.backend.exception.TimeSlotNotFoundException;
+import io.bvb.smarthealthcare.backend.exception.TimeSlotOccupiedException;
 import io.bvb.smarthealthcare.backend.model.AppointmentRequest;
+import io.bvb.smarthealthcare.backend.model.AppointmentResponse;
 import io.bvb.smarthealthcare.backend.model.PatientResponse;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
+import io.bvb.smarthealthcare.backend.util.CurrentUserData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientService.class);
     private final AppointmentRepository appointmentRepository;
     private final TimeSlotRepository timeSlotRepository;
     private final PatientRepository patientRepository;
@@ -29,11 +38,11 @@ public class PatientService {
     }
 
     public List<PatientResponse> listPatients() {
-        return convertPatientToPatientResponses(patientRepository.findAllByDeleted(Boolean.FALSE));
+        return PatientResponse.convertPatientsToPatientResponses(patientRepository.findAllByDeleted(Boolean.FALSE));
     }
 
     public PatientResponse getPatient(Long id) {
-        return convertPatientToPatientResponse(getPatientById(id));
+        return PatientResponse.convertPatientToPatientResponse(getPatientById(id));
     }
 
     @Transactional
@@ -43,53 +52,49 @@ public class PatientService {
         patientRepository.save(patient);
     }
 
-    public ResponseEntity<String> bookAppointment(final AppointmentRequest appointmentRequest) {
-        TimeSlot timeSlot = timeSlotRepository.findById(appointmentRequest.getTimeSlotId()).orElseThrow(() -> new RuntimeException("Time slot not found"));
-
+    public AppointmentResponse bookAppointment(final AppointmentRequest appointmentRequest) {
+        TimeSlot timeSlot = timeSlotRepository.findById(appointmentRequest.getTimeSlotId())
+                .orElseThrow(() -> {
+                    LOGGER.error("Time slot not found : {}", appointmentRequest.getTimeSlotId() );
+                    return new TimeSlotNotFoundException(appointmentRequest.getTimeSlotId());
+                });
         if (timeSlot.isBooked()) {
-            throw new RuntimeException("Time slot already booked");
+            LOGGER.error("Timeslot is already booked :: TimeSlot Id : {}", appointmentRequest.getTimeSlotId());
+            throw new TimeSlotOccupiedException();
         }
+        timeSlot.setBooked(true);
+        timeSlotRepository.save(timeSlot);
 
-        Patient patient = patientRepository.findById(appointmentRequest.getPatientId()).orElseThrow(() -> new RuntimeException("Patient not found"));
         Appointment appointment = new Appointment();
-        appointment.setPatient(patient);
+        appointment.setPatient(patientRepository.findById(CurrentUserData.getUser().getId())
+                .orElseThrow(() -> {
+                    LOGGER.error("Patient not found : {}", CurrentUserData.getUser().getId());
+                    return new PatientNotFoundException(CurrentUserData.getUser().getId());
+                }));
         appointment.setTimeSlot(timeSlot);
 
-        appointmentRepository.save(appointment);
-        return ResponseEntity.ok("Appointment booked successfully");
+        final Appointment savedAppointment = appointmentRepository.save(appointment);
+        return new AppointmentResponse(savedAppointment.getId());
     }
 
-    public ResponseEntity<List<Appointment>> getUpcomingAppointments(Long patientId) {
-        List<Appointment> appointments = null;//appointmentRepository.findByDoctorIdAndDate(patientId, LocalDate.now());
-        return ResponseEntity.ok(appointments);
+    public String cancelAppointment(String appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
+
+        TimeSlot timeSlot = appointment.getTimeSlot();
+        timeSlot.setBooked(false);
+        timeSlotRepository.save(timeSlot);
+        appointment.setCancelled(true);
+        appointmentRepository.saveAndFlush(appointment);
+        return "Appointment canceled successfully.";
+    }
+
+    public List<Appointment> getUpcomingAppointments() {
+        return appointmentRepository.findUpcomingAppointments(CurrentUserData.getUser().getId(), LocalDate.now());
     }
 
     public Patient getPatientById(Long id) {
         return patientRepository.findByIdAndDeleted(id, Boolean.FALSE)
                 .orElseThrow(() -> new PatientNotFoundException(id));
-    }
-
-    private List<PatientResponse> convertPatientToPatientResponses(List<Patient> patients) {
-        return patients.stream().map(this::convertPatientToPatientResponse).collect(Collectors.toList());
-    }
-
-    private PatientResponse convertPatientToPatientResponse(Patient patient) {
-        final PatientResponse patientResponse = new PatientResponse();
-        patientResponse.setId(patient.getId());
-        patientResponse.setEmail(patient.getEmail());
-        patientResponse.setPhoneNumber(patient.getPhoneNumber());
-        patientResponse.setFirstName(patient.getFirstName());
-        patientResponse.setLastName(patient.getLastName());
-        patientResponse.setGender(patient.getGender());
-        patientResponse.setDateOfBirth(patient.getDateOfBirth());
-        patientResponse.setAddress(patient.getAddress());
-        patientResponse.setMaritalStatus(patient.getMaritalStatus());
-        patientResponse.setEmergencyNumber(patient.getEmergencyNumber());
-        patientResponse.setEmergencyName(patient.getEmergencyName());
-        patientResponse.setAllergies(patient.getAllergies());
-        patientResponse.setBloodGroup(patient.getBloodGroup());
-        patientResponse.setMaritalStatus(patient.getMaritalStatus());
-        patientResponse.setPreConditions(patient.getPreConditions());
-        return patientResponse;
     }
 }
