@@ -5,9 +5,7 @@ import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.User;
 import io.bvb.smarthealthcare.backend.exception.AlreadyRegisteredException;
 import io.bvb.smarthealthcare.backend.exception.InvalidDataException;
-import io.bvb.smarthealthcare.backend.model.PutDoctorRequest;
-import io.bvb.smarthealthcare.backend.model.PutPatientRequest;
-import io.bvb.smarthealthcare.backend.model.UserResponse;
+import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
 import io.bvb.smarthealthcare.backend.repository.PatientRepository;
 import io.bvb.smarthealthcare.backend.repository.UserRepository;
@@ -55,8 +53,20 @@ public class UserService {
         patient.setEmergencyName(putPatientRequest.getEmergencyName());
 
         final Patient updatedPatient = patientRepository.saveAndFlush(patient);
-        LOGGER.info("Patient is updated successfully : Patient Id : {}, Email : {}", updatedPatient.getId(), updatedPatient.getEmail());
-        CurrentUserData.setUser(UserResponse.mapUserToUserResponse(updatedPatient));
+        LOGGER.info("Patient is updated successfully :: Patient Id : {}, Email : {}", updatedPatient.getId(), updatedPatient.getEmail());
+        CurrentUserData.setUser(PatientResponse.convertPatientToPatientResponse(updatedPatient));
+    }
+
+    public void updateAdmin(final PutAdminRequest putAdminRequest) {
+        final UserResponse userResponse = CurrentUserData.getUser();
+        final User user = getUser(userResponse.getEmail());
+        validateSelfEdit(userResponse, user);
+        validateAdminPhoneNumber(user, putAdminRequest);
+        user.setPassword(putAdminRequest.getPassword());
+        user.setPhoneNumber(putAdminRequest.getPhoneNumber());
+        userRepository.saveAndFlush(user);
+        CurrentUserData.setUser(UserResponse.mapUserToUserResponse(user));
+        LOGGER.info("User is updated successfully :: User Id : {}, Email : {}", user.getId(), user.getEmail());
     }
 
     public void updateDoctor(final PutDoctorRequest putDoctorRequest) {
@@ -75,8 +85,8 @@ public class UserService {
         doctor.setExperience(putDoctorRequest.getExperience());
         doctor.setQualification(putDoctorRequest.getQualification());
         final Doctor updatedDoctor = doctorRepository.saveAndFlush(doctor);
-        LOGGER.info("Doctor is updated successfully : Doctor Id : {}, Email : {}", updatedDoctor.getId(), updatedDoctor.getEmail());
-        CurrentUserData.setUser(UserResponse.mapUserToUserResponse(updatedDoctor));
+        LOGGER.info("Doctor is updated successfully :: Doctor Id : {}, Email : {}", updatedDoctor.getId(), updatedDoctor.getEmail());
+        CurrentUserData.setUser(DoctorResponse.convertDoctorToResponse(updatedDoctor));
     }
 
     private User getUser(final String username) {
@@ -116,6 +126,16 @@ public class UserService {
             if (patientUser.isPresent() && !Objects.equals(patientUser.get().getId(), user.getId())) {
                 LOGGER.error("Phone Number is already registered :: Phone Number : {}", putPatientRequest.getPhoneNumber());
                 throw new AlreadyRegisteredException("PhoneNumber", putPatientRequest.getPhoneNumber());
+            }
+        }
+    }
+
+    private void validateAdminPhoneNumber(final User user, final PutAdminRequest putAdminRequest) {
+        if (!user.getPhoneNumber().equals(putAdminRequest.getPhoneNumber())) {
+            final Optional<User> patientUser = userRepository.findByPhoneNumber(putAdminRequest.getPhoneNumber());
+            if (patientUser.isPresent() && !Objects.equals(patientUser.get().getId(), user.getId())) {
+                LOGGER.error("Phone Number is already registered :: Phone Number : {}", putAdminRequest.getPhoneNumber());
+                throw new AlreadyRegisteredException("PhoneNumber", putAdminRequest.getPhoneNumber());
             }
         }
     }

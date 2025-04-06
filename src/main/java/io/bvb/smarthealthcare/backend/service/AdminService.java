@@ -56,10 +56,8 @@ public class AdminService {
             throw new InvalidDataException("Doctor is not in pending state");
         }
 
-//        doctorRepository.delete(doctor);
-        doctor.setStatus(DoctorStatus.REJECTED);
-        notificationService.sendNotification(doctorId, "doctor.rejected", new Object[]{doctor.getFirstName()});
         emailService.sendRejectionMail(doctor.getEmail(), doctor.getFirstName());
+        doctorRepository.delete(doctor);
         LOGGER.info("Doctor rejected successfully. Id : {}, Email : {}", doctorId, doctor.getEmail());
     }
 }

@@ -22,5 +22,6 @@ public class Notification {
     private Long userId;
     private String message;
     private LocalDateTime date;
+    private boolean isRead;
 }
 

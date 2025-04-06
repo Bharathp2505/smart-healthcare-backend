@@ -5,10 +5,7 @@ import io.bvb.smarthealthcare.backend.model.NotificationResponse;
 import io.bvb.smarthealthcare.backend.service.NotificationService;
 import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +27,11 @@ public class NotificationController {
     @GetMapping("/{userId}")
     public List<NotificationResponse> getUserNotifications(@PathVariable Long userId) {
         return notificationService.getUserNotifications(userId);
+    }
+
+    @PutMapping("/{notificationId}/read")
+    public void markReadNotification(@PathVariable String notificationId) {
+        notificationService.markReadNotification(notificationId);
     }
 }
 

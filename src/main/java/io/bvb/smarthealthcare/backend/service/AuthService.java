@@ -154,9 +154,19 @@ public class AuthService {
         SecurityContextHolder.setContext(securityContext);
         contextRepository.saveContext(securityContext, httpRequest, httpResponse);
 
-        final UserResponse userResponse = UserResponse.mapUserToUserResponse(user);
-        // Set session attribute
-        httpRequest.getSession().setAttribute("user", userResponse);
+        UserResponse userResponse = null;
+        if (Role.PATIENT.equals(user.getRole())) {
+            final Patient patient = patientRepository.findById(user.getId()).get();
+            userResponse = PatientResponse.convertPatientToPatientResponse(patient);
+            httpRequest.getSession().setAttribute("user", userResponse);
+        } else if (Role.DOCTOR.equals(user.getRole())) {
+            final Doctor patient = doctorRepository.findById(user.getId()).get();
+            userResponse = DoctorResponse.convertDoctorToResponse(patient);
+            httpRequest.getSession().setAttribute("user", userResponse);
+        } else {
+            userResponse = UserResponse.mapUserToUserResponse(user);
+            httpRequest.getSession().setAttribute("user", userResponse);
+        }
         return userResponse;
     }
 

@@ -45,27 +45,7 @@ public class DoctorService {
     }
 
     private List<DoctorResponse> convertDoctorsToResponse(List<Doctor> doctors) {
-        return doctors.stream().map(this::convertDoctorToResponse).collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    private DoctorResponse convertDoctorToResponse(Doctor doctor) {
-        DoctorResponse doctorResponse = new DoctorResponse();
-        doctorResponse.setId(doctor.getId());
-        doctorResponse.setEmail(doctor.getEmail());
-        doctorResponse.setPhoneNumber(doctor.getPhoneNumber());
-        doctorResponse.setFirstName(doctor.getFirstName());
-        doctorResponse.setLastName(doctor.getLastName());
-        doctorResponse.setGender(doctor.getGender());
-        doctorResponse.setUserType(LoginUserType.getUserType(doctor.getRole()));
-        doctorResponse.setDateOfBirth(doctor.getDateOfBirth());
-        doctorResponse.setClinicName(doctor.getClinicName());
-        doctorResponse.setStatus(doctor.getStatus());
-        doctorResponse.setExperience(doctor.getExperience());
-        doctorResponse.setSpecialization(doctor.getSpecialization());
-        doctorResponse.setClinicAddress(doctor.getClinicAddress());
-        doctorResponse.setQualification(doctor.getQualification());
-        doctorResponse.setLicenseNumber(doctor.getLicenseNumber());
-        return doctorResponse;
+        return doctors.stream().map(DoctorResponse::convertDoctorToResponse).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Transactional
@@ -76,7 +56,7 @@ public class DoctorService {
     }
 
     public DoctorResponse getDoctor(Long id) {
-        return convertDoctorToResponse(getDoctorById(id));
+        return DoctorResponse.convertDoctorToResponse(getDoctorById(id));
     }
 
     public List<Appointment> getTodaysAppointments(Long doctorId) {
