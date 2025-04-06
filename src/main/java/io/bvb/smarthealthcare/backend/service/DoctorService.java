@@ -6,6 +6,7 @@ import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
 import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
+import io.bvb.smarthealthcare.backend.exception.InvalidDataException;
 import io.bvb.smarthealthcare.backend.model.DoctorResponse;
 import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
 import io.bvb.smarthealthcare.backend.model.TimeSlotResponse;
@@ -68,10 +69,19 @@ public class DoctorService {
     public TimeSlotResponse allocateTimeSlot(TimeSlotRequest request) {
         final UserResponse userResponse = CurrentUserData.getUser();
         if (LocalDate.now().isAfter(request.getDate())) {
-            throw new IllegalArgumentException("Invalid date format");
+            LOGGER.error("Invalid date format :: {}", request.getDate());
+            throw new InvalidDataException("Invalid date format");
+        }
+        if (LocalTime.now().isAfter(request.getStartTime())) {
+            LOGGER.error("Invalid start-time");
+            throw new InvalidDataException("Start Time should not be previous :: " + request.getStartTime());
+        }
+        if (LocalTime.now().isAfter(request.getEndTime())) {
+            LOGGER.error("Invalid end-time");
+            throw new InvalidDataException("End Time should not be previous :: " + request.getEndTime());
         }
         if (request.getDuration() <= 0 || request.getDuration() > 60) {
-            throw new IllegalArgumentException("Invalid slot duration. Must be between 1 and 60 minutes.");
+            throw new InvalidDataException("Invalid slot duration. Must be between 1 and 60 minutes.");
         }
         Doctor doctor = getDoctorById(userResponse.getId());
 
