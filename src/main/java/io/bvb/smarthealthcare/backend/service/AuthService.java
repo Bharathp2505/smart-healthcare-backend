@@ -178,11 +178,11 @@ public class AuthService {
     }
 
     public void forgotPassword(final ResetPassword resetPassword) {
-        final User user = userRepository.findByEmail(resetPassword.getEmail()).orElseThrow(() -> new ApplicationException(String.format("%s is not found.", resetPassword.getEmail())));
+        final User user = userRepository.findByEmailOrPhoneNumber(resetPassword.getEmail(), resetPassword.getEmail()).orElseThrow(() -> new ApplicationException(String.format("%s is not found.", resetPassword.getEmail())));
         if (Role.ADMIN.equals(user.getRole())) {
             throw new ApplicationException("Admin cannot change the password.");
         }
-        resetPasswordService.generateResetToken(resetPassword.getEmail(), user.getFirstName());
+        resetPasswordService.generateResetToken(user.getEmail(), user.getFirstName());
     }
 
     @Transactional
