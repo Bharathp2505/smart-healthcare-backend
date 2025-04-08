@@ -1,7 +1,6 @@
 package io.bvb.smarthealthcare.backend.service;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
-import io.bvb.smarthealthcare.backend.constant.LoginUserType;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
@@ -61,8 +60,11 @@ public class DoctorService {
     }
 
     public List<Appointment> getTodaysAppointments(Long doctorId) {
-        List<Appointment> appointments = appointmentRepository.findAppointmentsByDoctorIdAndDate(doctorId, LocalDate.now());
-        return appointments;
+        return appointmentRepository.findAppointmentsByDoctorIdAndDate(doctorId, LocalDate.now());
+    }
+
+    public List<Appointment> getUpcomingAppointments(Long doctorId) {
+        return appointmentRepository.findUpcomingAppointmentsByDoctorIdAndDate(doctorId, LocalDate.now());
     }
 
     @Transactional
@@ -103,12 +105,12 @@ public class DoctorService {
             current = current.plusMinutes(request.getDuration());
         }
         timeSlotRepository.saveAll(timeSlots);
-        return getTimeSlotsByDoctorId(doctor.getId());
+        return getTimeSlotsByDoctorIdAndDate(doctor.getId(), request.getDate());
     }
 
-    public TimeSlotResponse getTimeSlotsByDoctorId(Long doctorId) {
+    public TimeSlotResponse getTimeSlotsByDoctorIdAndDate(Long doctorId, LocalDate localDate) {
         final Doctor doctor = getDoctorById(doctorId);
-        final List<TimeSlot> timeSlots = timeSlotRepository.findByDoctorId(doctorId);
+        final List<TimeSlot> timeSlots = timeSlotRepository.findByDoctorIdAndDate(doctorId, localDate);
         final TimeSlotResponse timeSlotResponse = new TimeSlotResponse();
         timeSlotResponse.setDoctorId(doctorId);
         timeSlotResponse.setSpecialization(doctor.getSpecialization());

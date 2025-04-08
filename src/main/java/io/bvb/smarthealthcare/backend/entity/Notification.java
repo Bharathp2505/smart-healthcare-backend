@@ -20,6 +20,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private Long userId;
+    @Column(name = "message", length = 5000)
     private String message;
     private LocalDateTime date;
     private boolean isRead;

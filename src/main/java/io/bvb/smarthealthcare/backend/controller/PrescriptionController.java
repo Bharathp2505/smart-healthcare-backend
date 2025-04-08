@@ -1,8 +1,8 @@
 package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.entity.Prescription;
+import io.bvb.smarthealthcare.backend.model.PrescriptionResponse;
 import io.bvb.smarthealthcare.backend.service.PrescriptionService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +22,8 @@ public class PrescriptionController {
     }
 
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Prescription>> getPrescriptionsByPatient(@PathVariable Long patientId) {
-        return ResponseEntity.ok(prescriptionService.getPrescriptionsByPatient(patientId));
+    public List<PrescriptionResponse> getPrescriptionsByPatient(@PathVariable Long patientId) {
+        return prescriptionService.getPrescriptionsByPatient(patientId);
     }
 
     @GetMapping("/doctor/{doctorId}")
