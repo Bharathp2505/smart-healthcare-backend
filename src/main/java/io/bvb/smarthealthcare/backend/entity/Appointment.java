@@ -1,5 +1,6 @@
 package io.bvb.smarthealthcare.backend.entity;
 
+import io.bvb.smarthealthcare.backend.constant.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +27,7 @@ public class Appointment {
     private Patient patient;
 
     private boolean isCancelled = false;
+    @Enumerated(EnumType.STRING)
+    private AppointmentStatus status = AppointmentStatus.IN_PROGRESS;
 }
 

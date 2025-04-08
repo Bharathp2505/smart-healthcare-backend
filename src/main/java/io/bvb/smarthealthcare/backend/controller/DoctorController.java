@@ -2,17 +2,16 @@ package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
-import io.bvb.smarthealthcare.backend.entity.Prescription;
 import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.service.DoctorService;
 import io.bvb.smarthealthcare.backend.service.PrescriptionService;
 import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -52,27 +51,24 @@ public class DoctorController {
         return doctorService.getTodaysAppointments(CurrentUserData.getUser().getId());
     }
 
+    @GetMapping("/upcoming-appointments")
+    public List<Appointment> getUpcomingAppointments() {
+        return doctorService.getUpcomingAppointments(CurrentUserData.getUser().getId());
+    }
+
     @PostMapping("/allocate-timeslots")
     public TimeSlotResponse allocateTimeSlot(@Valid @RequestBody TimeSlotRequest request) {
         return doctorService.allocateTimeSlot(request);
     }
 
-    @GetMapping("/timeslots/{doctorId}")
-    public TimeSlotResponse getTimeslotsByDoctor(@PathVariable Long doctorId) {
-        return doctorService.getTimeSlotsByDoctorId(doctorId);
+    @GetMapping("/timeslots/{doctorId}/date/{date}")
+    public TimeSlotResponse getTimeslotsByDoctor(@PathVariable Long doctorId, @PathVariable LocalDate date) {
+        return doctorService.getTimeSlotsByDoctorIdAndDate(doctorId, date);
     }
 
     @PostMapping("/prescribe")
-    public ResponseEntity<Prescription> prescribeMedication(@Valid @RequestBody PrescriptionRequest request, final HttpSession session) {
-        Prescription prescription = prescriptionService.prescribeMedication(
-                CurrentUserData.getUser().getId(),
-                request.getPatientId(),
-                request.getMedicationName(),
-                request.getDosage(),
-                request.getTimeToTake(),
-                request.getStartDate(),
-                request.getEndDate()
-        );
-        return ResponseEntity.ok(prescription);
+    public ResponseEntity<StringResponse> prescribeMedication(@Valid @RequestBody PrescriptionsRequest prescriptionsRequest, final HttpSession session) {
+        prescriptionService.prescribeMedication(prescriptionsRequest);
+        return ResponseEntity.ok(new StringResponse("Prescription added."));
     }
 }
