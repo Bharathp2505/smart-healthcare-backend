@@ -74,11 +74,11 @@ public class DoctorService {
             LOGGER.error("Invalid date format :: {}", request.getDate());
             throw new InvalidDataException("Invalid date format");
         }
-        if (LocalTime.now().isAfter(request.getStartTime())) {
+        if (LocalDate.now().isEqual(request.getDate()) && LocalTime.now().isAfter(request.getStartTime())) {
             LOGGER.error("Invalid start-time");
             throw new InvalidDataException("Start Time should not be previous :: " + request.getStartTime());
         }
-        if (LocalTime.now().isAfter(request.getEndTime())) {
+        if (LocalDate.now().isEqual(request.getDate()) && LocalTime.now().isAfter(request.getEndTime())) {
             LOGGER.error("Invalid end-time");
             throw new InvalidDataException("End Time should not be previous :: " + request.getEndTime());
         }

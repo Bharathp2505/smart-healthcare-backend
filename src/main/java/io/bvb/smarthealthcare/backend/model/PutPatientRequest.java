@@ -1,7 +1,6 @@
 package io.bvb.smarthealthcare.backend.model;
 
 import io.bvb.smarthealthcare.backend.constant.MaritalStatus;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -11,10 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PutPatientRequest extends LoginRequest {
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number format")
-    private String phoneNumber;
+public class PutPatientRequest {
     @NotNull(message = "Address is required")
     private String address;
 
