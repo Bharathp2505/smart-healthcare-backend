@@ -37,6 +37,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean deleted = Boolean.FALSE;
+    // Common: Add this to Patient, Doctor, and Admin entities
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
     @Version
     private long version;
 }

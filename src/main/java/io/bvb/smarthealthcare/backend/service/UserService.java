@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -24,18 +25,25 @@ public class UserService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    public UserService(PatientRepository patientRepository, DoctorRepository doctorRepository, UserRepository userRepository) {
+    public UserService(PatientRepository patientRepository, DoctorRepository doctorRepository, UserRepository userRepository, final FileStorageService fileStorageService) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
     }
 
-    public void updatePatient(final PutPatientRequest putPatientRequest) {
+    public void updatePatient(final PutPatientRequest putPatientRequest, final MultipartFile profileImage) {
         final UserResponse userResponse = CurrentUserData.getUser();
         final User user = getUser(userResponse.getEmail());
         validateSelfEdit(userResponse, user);
+
         final Patient patient = patientRepository.findById(user.getId()).get();
+        if (profileImage != null && !profileImage.isEmpty()) {
+            final String profileImageUrl = fileStorageService.storeFile(profileImage);
+            patient.setProfilePictureUrl(profileImageUrl);
+        }
         patient.setAddress(putPatientRequest.getAddress());
         patient.setMaritalStatus(putPatientRequest.getMaritalStatus());
         patient.setPreConditions(putPatientRequest.getPreConditions());
@@ -61,11 +69,15 @@ public class UserService {
         LOGGER.info("User is updated successfully :: User Id : {}, Email : {}", user.getId(), user.getEmail());
     }
 
-    public void updateDoctor(final PutDoctorRequest putDoctorRequest) {
+    public void updateDoctor(final PutDoctorRequest putDoctorRequest, final MultipartFile profileImage) {
         final UserResponse userResponse = CurrentUserData.getUser();
         final User user = getUser(userResponse.getEmail());
         final Doctor doctor = doctorRepository.findById(user.getId()).get();
         validateSelfEdit(userResponse, user);
+        if (profileImage != null && !profileImage.isEmpty()) {
+            final String profileImageUrl = fileStorageService.storeFile(profileImage);
+            doctor.setProfilePictureUrl(profileImageUrl);
+        }
         doctor.setClinicName(putDoctorRequest.getClinicName());
         doctor.setClinicAddress(putDoctorRequest.getClinicAddress());
         doctor.setSpecialization(putDoctorRequest.getSpecialization());

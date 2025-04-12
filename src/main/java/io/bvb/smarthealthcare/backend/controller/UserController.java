@@ -9,6 +9,7 @@ import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/api/user")
@@ -36,15 +37,15 @@ public class UserController {
     }*/
 
     @PutMapping("/patient")
-    public UserResponse editPatient(@Valid @RequestBody PutPatientRequest putPatientRequest, final HttpSession httpSession) {
-        userService.updatePatient(putPatientRequest);
+    public UserResponse editPatient(@Valid @RequestPart("data") PutPatientRequest putPatientRequest, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage, final HttpSession httpSession) {
+        userService.updatePatient(putPatientRequest, profileImage);
         httpSession.setAttribute("user", CurrentUserData.getUser());
         return CurrentUserData.getUser();
     }
 
     @PutMapping("/doctor")
-    public UserResponse editDoctor(@Valid @RequestBody PutDoctorRequest putDoctorRequest, final HttpSession httpSession) {
-        userService.updateDoctor(putDoctorRequest);
+    public UserResponse editDoctor(@Valid @RequestPart("data") PutDoctorRequest putDoctorRequest, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage, final HttpSession httpSession) {
+        userService.updateDoctor(putDoctorRequest, profileImage);
         httpSession.setAttribute("user", CurrentUserData.getUser());
         return CurrentUserData.getUser();
     }
