@@ -2,6 +2,7 @@ package io.bvb.smarthealthcare.backend.controller;
 
 import io.bvb.smarthealthcare.backend.model.FeedbackRequest;
 import io.bvb.smarthealthcare.backend.model.FeedbackResponse;
+import io.bvb.smarthealthcare.backend.model.StringResponse;
 import io.bvb.smarthealthcare.backend.service.FeedbackService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class FeedbackController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<String> submitFeedback(@Valid @RequestBody FeedbackRequest request) {
-        return ResponseEntity.ok(feedbackService.submitFeedback(request));
+    public ResponseEntity<StringResponse> submitFeedback(@Valid @RequestBody FeedbackRequest request) {
+        return ResponseEntity.ok(new StringResponse(feedbackService.submitFeedback(request)));
     }
 
     @GetMapping("/doctor/{doctorId}")
