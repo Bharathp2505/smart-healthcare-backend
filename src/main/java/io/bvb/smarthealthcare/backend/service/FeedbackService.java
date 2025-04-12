@@ -16,9 +16,7 @@ public class FeedbackService {
     private final DoctorService doctorService;
     private final PatientService patientService;
 
-    public FeedbackService(FeedbackRepository feedbackRepo,
-                           DoctorService doctorService,
-                           PatientService patientService) {
+    public FeedbackService(FeedbackRepository feedbackRepo, DoctorService doctorService, PatientService patientService) {
         this.feedbackRepo = feedbackRepo;
         this.doctorService = doctorService;
         this.patientService = patientService;
@@ -36,7 +34,7 @@ public class FeedbackService {
     }
 
     public List<FeedbackResponse> getFeedbacksForDoctor(Long doctorId) {
-        return feedbackRepo.findByDoctorId(doctorId).stream().map(FeedbackResponse::convertRequestToResponse).toList();
+        return feedbackRepo.findByDoctorIdOrderByRatingDesc(doctorId).stream().map(FeedbackResponse::convertRequestToResponse).toList();
     }
 }
 
