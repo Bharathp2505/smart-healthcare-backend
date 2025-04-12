@@ -62,8 +62,13 @@ public class DoctorController {
     }
 
     @GetMapping("/timeslots/{doctorId}/date/{date}")
-    public TimeSlotResponse getTimeslotsByDoctor(@PathVariable Long doctorId, @PathVariable LocalDate date) {
+    public TimeSlotResponse getTimeslotsByDoctorAndDate(@PathVariable Long doctorId, @PathVariable LocalDate date) {
         return doctorService.getTimeSlotsByDoctorIdAndDate(doctorId, date);
+    }
+
+    @GetMapping("/timeslots/{doctorId}")
+    public TimeSlotResponse getTimeslotsByDoctor(@PathVariable Long doctorId) {
+        return doctorService.getTimeSlotsByDoctorId(doctorId);
     }
 
     @PostMapping("/prescribe")

@@ -108,6 +108,19 @@ public class DoctorService {
         return getTimeSlotsByDoctorIdAndDate(doctor.getId(), request.getDate());
     }
 
+    public TimeSlotResponse getTimeSlotsByDoctorId(Long doctorId) {
+        final Doctor doctor = getDoctorById(doctorId);
+        final List<TimeSlot> timeSlots = timeSlotRepository.findByDoctorId(doctorId);
+        final TimeSlotResponse timeSlotResponse = new TimeSlotResponse();
+        timeSlotResponse.setDoctorId(doctorId);
+        timeSlotResponse.setSpecialization(doctor.getSpecialization());
+        timeSlotResponse.setFirstName(doctor.getFirstName());
+        timeSlotResponse.setLastName(doctor.getLastName());
+
+        timeSlotResponse.setTimeSlots(this.convertTimeSlotsToResponse(timeSlots));
+        return timeSlotResponse;
+    }
+
     public TimeSlotResponse getTimeSlotsByDoctorIdAndDate(Long doctorId, LocalDate localDate) {
         final Doctor doctor = getDoctorById(doctorId);
         final List<TimeSlot> timeSlots = timeSlotRepository.findByDoctorIdAndDate(doctorId, localDate);
@@ -131,7 +144,7 @@ public class DoctorService {
             timeSlot1.setClinicName(timeSlot.getClinicName());
             timeSlot1.setDate(timeSlot.getDate());
             return timeSlot1;
-        }).sorted(Comparator.comparing(io.bvb.smarthealthcare.backend.model.TimeSlot::getStartTime)).collect(Collectors.toList());
+        }).sorted(Comparator.comparing(io.bvb.smarthealthcare.backend.model.TimeSlot::getDate).thenComparing(io.bvb.smarthealthcare.backend.model.TimeSlot::getStartTime)).collect(Collectors.toList());
     }
 
 
@@ -147,7 +160,6 @@ public class DoctorService {
     }
 
     public Doctor getDoctorById(Long id) {
-        return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE)
-                .orElseThrow(() -> new DoctorNotFoundException(id));
+        return doctorRepository.findByIdAndDeleted(id, Boolean.FALSE).orElseThrow(() -> new DoctorNotFoundException(id));
     }
 }
