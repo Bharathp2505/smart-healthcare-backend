@@ -1,5 +1,7 @@
-
 spring:
+  web:
+    resources:
+      static-locations: classpath:/static/
   mail:
     host: smtp.gmail.com
     port: 587
@@ -22,11 +24,15 @@ spring:
     show-sql: true
   server:
     servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 15MB
       session:
         timeout: 60m
         cookie:
           http-only: true
 debug: false
+
 
 logging:
   level:

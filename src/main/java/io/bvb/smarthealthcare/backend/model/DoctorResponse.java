@@ -37,6 +37,7 @@ public class DoctorResponse extends UserResponse {
         doctorResponse.setClinicAddress(doctor.getClinicAddress());
         doctorResponse.setQualification(doctor.getQualification());
         doctorResponse.setLicenseNumber(doctor.getLicenseNumber());
+        doctorResponse.setProfileImageUrl(doctor.getProfilePictureUrl());
         return doctorResponse;
     }
 }

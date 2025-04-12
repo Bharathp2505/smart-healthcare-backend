@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/api/auth")
@@ -19,15 +20,15 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register/patient")
-    public ResponseEntity<StringResponse> registerPatient(@Valid @RequestBody PatientRequest request) {
-        authService.registerPatient(request);
+    @PostMapping(value = "/register/patient", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<StringResponse> registerPatient(@Valid @RequestPart("data") PatientRequest request, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        authService.registerPatient(request, profileImage);
         return ResponseEntity.ok(new StringResponse("Patient Registered Successfully!!"));
     }
 
-    @PostMapping("/register/doctor")
-    public ResponseEntity<StringResponse> registerDoctor(@Valid @RequestBody DoctorRequest request) {
-        authService.registerDoctor(request);
+    @PostMapping(value = "/register/doctor", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<StringResponse> registerDoctor(@Valid @RequestPart("data") DoctorRequest request, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        authService.registerDoctor(request, profileImage);
         return ResponseEntity.ok(new StringResponse("Doctor Registered Successfully!!"));
     }
 

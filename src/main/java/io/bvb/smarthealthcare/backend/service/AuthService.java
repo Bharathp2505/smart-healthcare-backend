@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -42,8 +43,9 @@ public class AuthService {
     private final ResetPasswordService resetPasswordService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final NotificationService notificationService;
+    private final FileStorageService fileStorageService;
 
-    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository, EmailService emailService, ResetPasswordService resetPasswordService, PasswordResetTokenRepository passwordResetTokenRepository, NotificationService notificationService) {
+    public AuthService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, PasswordEncoder passwordEncoder, SecurityContextRepository contextRepository, EmailService emailService, ResetPasswordService resetPasswordService, PasswordResetTokenRepository passwordResetTokenRepository, NotificationService notificationService, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
@@ -53,12 +55,17 @@ public class AuthService {
         this.resetPasswordService = resetPasswordService;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.notificationService = notificationService;
+        this.fileStorageService = fileStorageService;
     }
 
-    public void registerPatient(PatientRequest request) {
+    public void registerPatient(PatientRequest request, final MultipartFile profileImage) {
         verifyEmailExists(request.getEmail());
         verifyPhoneNumberExists(request.getPhoneNumber());
 
+        String profileImageUrl = null;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            profileImageUrl = fileStorageService.storeFile(profileImage);
+        }
         Patient patient = new Patient();
         patient.setEmail(request.getEmail());
         patient.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -75,6 +82,7 @@ public class AuthService {
         patient.setGender(request.getGender());
         patient.setPreConditions(request.getPreConditions());
         patient.setEmergencyNumber(request.getEmergencyNumber());
+        patient.setProfilePictureUrl(profileImageUrl);
         patient = patientRepository.save(patient);
         try {
             final User adminUser = userRepository.findByEmail(AdminUserInitializer.ADMIN_USERNAME).get();
@@ -86,10 +94,15 @@ public class AuthService {
         LOGGER.info("Patient registered successfully" + patient.getId());
     }
 
-    public void registerDoctor(DoctorRequest request) {
+    public void registerDoctor(DoctorRequest request, final MultipartFile profileImage) {
         verifyEmailExists(request.getEmail());
         verifyPhoneNumberExists(request.getPhoneNumber());
         verifyLicenseNumberExists(request.getLicenseNumber());
+
+        String profileImageUrl = null;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            profileImageUrl = fileStorageService.storeFile(profileImage);
+        }
 
         Doctor doctor = new Doctor();
         doctor.setEmail(request.getEmail());
@@ -106,6 +119,7 @@ public class AuthService {
         doctor.setExperience(request.getExperience());
         doctor.setClinicName(request.getClinicName());
         doctor.setQualification(request.getQualification());
+        doctor.setProfilePictureUrl(profileImageUrl);
         doctor = doctorRepository.save(doctor);
         try {
             final User adminUser = userRepository.findByEmail(AdminUserInitializer.ADMIN_USERNAME).get();

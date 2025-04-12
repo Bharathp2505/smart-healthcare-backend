@@ -20,6 +20,7 @@ public class UserResponse {
     private String lastName;
     private Date dateOfBirth;
     private Gender gender;
+    private String profileImageUrl;
     private LoginUserType userType;
 
     public static UserResponse mapUserToUserResponse(User user) {
@@ -31,6 +32,7 @@ public class UserResponse {
         userResponse.setGender(user.getGender());
         userResponse.setId(user.getId());
         userResponse.setPhoneNumber(user.getPhoneNumber());
+        userResponse.setProfileImageUrl(user.getProfilePictureUrl());
         userResponse.setUserType(LoginUserType.getUserType(user.getRole()));
         return userResponse;
     }

@@ -3,15 +3,14 @@ package io.bvb.smarthealthcare.backend.service;
 import io.bvb.smarthealthcare.backend.constant.DoctorStatus;
 import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
+import io.bvb.smarthealthcare.backend.entity.Feedback;
 import io.bvb.smarthealthcare.backend.entity.TimeSlot;
 import io.bvb.smarthealthcare.backend.exception.DoctorNotFoundException;
 import io.bvb.smarthealthcare.backend.exception.InvalidDataException;
-import io.bvb.smarthealthcare.backend.model.DoctorResponse;
-import io.bvb.smarthealthcare.backend.model.TimeSlotRequest;
-import io.bvb.smarthealthcare.backend.model.TimeSlotResponse;
-import io.bvb.smarthealthcare.backend.model.UserResponse;
+import io.bvb.smarthealthcare.backend.model.*;
 import io.bvb.smarthealthcare.backend.repository.AppointmentRepository;
 import io.bvb.smarthealthcare.backend.repository.DoctorRepository;
+import io.bvb.smarthealthcare.backend.repository.FeedbackRepository;
 import io.bvb.smarthealthcare.backend.repository.TimeSlotRepository;
 import io.bvb.smarthealthcare.backend.util.CurrentUserData;
 import org.slf4j.Logger;
@@ -32,11 +31,13 @@ public class DoctorService {
     private final AppointmentRepository appointmentRepository;
     private final TimeSlotRepository timeSlotRepository;
     private final DoctorRepository doctorRepository;
+    private final FeedbackRepository feedbackRepository;
 
-    public DoctorService(AppointmentRepository appointmentRepository, TimeSlotRepository timeSlotRepository, DoctorRepository doctorRepository) {
+    public DoctorService(AppointmentRepository appointmentRepository, TimeSlotRepository timeSlotRepository, DoctorRepository doctorRepository, final FeedbackRepository feedbackRepository) {
         this.appointmentRepository = appointmentRepository;
         this.timeSlotRepository = timeSlotRepository;
         this.doctorRepository = doctorRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     public List<DoctorResponse> listDoctors() {
@@ -149,7 +150,15 @@ public class DoctorService {
 
 
     public List<DoctorResponse> searchDoctorsByClinicNameOrSpecialization(String searchString) {
-        return convertDoctorsToResponse(doctorRepository.findByClinicNameOrSpecializationContainingIgnoreCase(searchString, searchString));
+        final List<Doctor> doctors = doctorRepository.findByClinicNameOrSpecializationContainingIgnoreCase(searchString, searchString);
+        doctors.sort((d1, d2) -> Double.compare(getAverageRating(d2), getAverageRating(d1)));
+        return convertDoctorsToResponse(doctors);
+    }
+
+    private double getAverageRating(Doctor doctor) {
+        List<Feedback> feedbackList = feedbackRepository.findByDoctorIdOrderByRatingDesc(doctor.getId());
+        if (feedbackList.isEmpty()) return 0.0;
+        return feedbackList.stream().mapToInt(Feedback::getRating).average().orElse(0.0);
     }
 
     public List<DoctorResponse> listDoctors(DoctorStatus doctorStatus) {
