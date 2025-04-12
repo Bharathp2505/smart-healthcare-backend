@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3e577898-5aed-43fe-b09a-df453c8d54e8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HELP.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/SmartHealthcareBackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/SmartHealthcareBackendApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/config/MessageConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/config/MessageConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/AppointmentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/AppointmentStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/DoctorStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/DoctorStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/Gender.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/Gender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/LoginUserType.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/LoginUserType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/MaritalStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/MaritalStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/PrescriptionStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/PrescriptionStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/constant/TimeOfDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/constant/TimeOfDay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/DoctorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/DoctorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/FeedbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/FeedbackController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/NotificationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/PatientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/PatientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/PrescriptionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/PrescriptionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Appointment.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Appointment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Doctor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Feedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/PasswordResetToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/PasswordResetToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Patient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Prescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Prescription.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/TimeSlot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/AlreadyRegisteredException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/AlreadyRegisteredException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/ApplicationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/ApplicationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/AppointmentNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/AppointmentNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/DoctorNotApprovedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/DoctorNotApprovedException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/DoctorNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/DoctorNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/InvalidCredentialsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/InvalidCredentialsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/InvalidDataException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/InvalidDataException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/InvalidLoginUserTypeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/InvalidLoginUserTypeException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/NotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/NotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/NotificationNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/NotificationNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/PatientNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/PatientNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/PermissionDeniedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/PermissionDeniedException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/TimeSlotNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/TimeSlotNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/TimeSlotOccupiedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/TimeSlotOccupiedException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/exception/handler/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/exception/handler/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/interceptor/UserInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/interceptor/UserInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/AppointmentRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/AppointmentRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/AppointmentResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/AppointmentResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/BasicUserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/BasicUserRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/DoctorRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/DoctorRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/DoctorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/DoctorResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/ErrorMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/ErrorMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/FeedbackRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/FeedbackRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/FeedbackResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/FeedbackResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/NotificationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/NotificationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PatientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PatientRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PatientResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PatientResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionsRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PutAdminRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PutAdminRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PutDoctorRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PutDoctorRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/PutPatientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PutPatientRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/ResetPassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/ResetPassword.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/StringResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/StringResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/TimeSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/TimeSlot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/TimeSlotRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/TimeSlotRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/TimeSlotResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/TimeSlotResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/model/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/UserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/AppointmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/AppointmentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/DoctorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/DoctorRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/FeedbackRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/FeedbackRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/NotificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/NotificationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/PasswordResetTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/PasswordResetTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/PatientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/PatientRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/PrescriptionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/PrescriptionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/TimeSlotRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/TimeSlotRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/scheduler/PrescriptionStatusAutoCompletionScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/scheduler/PrescriptionStatusAutoCompletionScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/AdminUserInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/AdminUserInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/DoctorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/FeedbackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/FeedbackService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/FileStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/FileStorageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/PatientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/PatientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/PrescriptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/PrescriptionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/ResetPasswordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/ResetPasswordService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/bvb/smarthealthcare/backend/util/CurrentUserData.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/util/CurrentUserData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/messages/notifications.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/messages/notifications.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Appointments/appointment-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/Appointments/appointment-confirmation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Appointments/cancelled-by-patient-doctor.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/Appointments/cancelled-by-patient-doctor.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Appointments/cancelled-by-patient-patient.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/Appointments/cancelled-by-patient-patient.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/approval-template.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/approval-template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/doctor_rejection_mail.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/doctor_rejection_mail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/reset_password_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/reset_password_email.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/welcome_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/welcome_email.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/io/bvb/smarthealthcare/backend/SmartHealthcareBackendApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/io/bvb/smarthealthcare/backend/SmartHealthcareBackendApplicationTests.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="branchesCleanupHistory">
+      <BranchesCleanupHistory>
+        <option name="history">
+          <list>
+            <BranchCleanupEntry>
+              <option name="deletions">
+                <list>
+                  <BranchDeletion>
+                    <option name="hash" value="d6cc1198d94d2001f2da012151bde1d433d96698" />
+                    <option name="name" value="raghala-changes" />
+                  </BranchDeletion>
+                </list>
+              </option>
+              <option name="timestamp" value="1743762341157" />
+            </BranchCleanupEntry>
+          </list>
+        </option>
+      </BranchesCleanupHistory>
+    </option>
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="vijay-changes1" />
+                    <option name="lastUsedInstant" value="1743958717" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1743957774" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="vijay-changes" />
+                    <option name="lastUsedInstant" value="1743786303" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2v05R7k1rIlCHLJ2PWKPFYLG34R" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SmartHealthcareBackendApplication.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "vijay-changes1",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="SmartHealthcareBackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="io.bvb.smarthealthcare.backend.SmartHealthcareBackendApplication" />
+      <module name="smart-healthcare-backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.bvb.smarthealthcare.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.SmartHealthcareBackendApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3e577898-5aed-43fe-b09a-df453c8d54e8" name="Changes" comment="" />
+      <created>1743269140892</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743269140892</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/NotificationService.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/DoctorController.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/PrescriptionController.java</url>
+          <line>25</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/PrescriptionController.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/PatientController.java</url>
+          <line>57</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/PrescriptionService.java</url>
+          <line>37</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/UserService.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/PatientController.java</url>
+          <line>56</line>
+          <properties class="io.bvb.smarthealthcare.backend.controller.PatientController">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/DoctorController.java</url>
+          <line>74</line>
+          <properties class="io.bvb.smarthealthcare.backend.controller.DoctorController">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

@@ -1,9 +1,8 @@
 # IntelliJ IDEA settings
-.idea/
 *.iml
 
 # Target and build directories
-/target/
+/backend/target/
 /out/
 /build/
 
@@ -27,3 +26,5 @@
 .DS_Store
 Thumbs.db
 /uploads/
+/target/
+/.idea/
