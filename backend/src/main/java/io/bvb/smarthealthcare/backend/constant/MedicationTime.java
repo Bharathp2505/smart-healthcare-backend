@@ -1,6 +1,6 @@
 package io.bvb.smarthealthcare.backend.constant;
 
-public enum TimeOfDay {
+public enum MedicationTime {
     MORNING, AFTERNOON, NIGHT
 }
 
