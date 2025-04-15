@@ -4,6 +4,7 @@ import io.bvb.smarthealthcare.backend.entity.Appointment;
 import io.bvb.smarthealthcare.backend.entity.Doctor;
 import io.bvb.smarthealthcare.backend.entity.Patient;
 import io.bvb.smarthealthcare.backend.entity.User;
+import io.bvb.smarthealthcare.backend.model.GetInTouchRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -167,6 +168,27 @@ public class EmailService {
         mailSender.send(doctorMsg);
     }
 
+    public void sendGetInTouchEmail(final GetInTouchRequest getInTouchRequest) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", getInTouchRequest.getName());
+        variables.put("email", getInTouchRequest.getName());
+        variables.put("mobile", getInTouchRequest.getName());
+        variables.put("subject", getInTouchRequest.getSubject());
+        variables.put("message", getInTouchRequest.getMessage());
+        // Load and process the HTML template
+        Context context = new Context();
+        context.setVariables(variables);
+        String htmlContent = templateEngine.process("get-in-touch-email-template", context);
+
+        helper.setTo(mailFromAddress);
+        helper.setSubject(getInTouchRequest.getSubject());
+        helper.setText(htmlContent, true); // true to enable HTML content
+        helper.setFrom(mailFromAddress);
+
+        mailSender.send(message);
+    }
 
 }
 

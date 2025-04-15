@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3e577898-5aed-43fe-b09a-df453c8d54e8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/controller/ContactController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/GetInTouchRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/get-in-touch-email-template.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Prescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/entity/Prescription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/model/PrescriptionsRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/PrescriptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/PrescriptionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/io/bvb/smarthealthcare/backend/service/EmailService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +20,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
