@@ -2,7 +2,7 @@
 *.iml
 
 # Target and build directories
-/backend/target/
+/backend-1/target/
 /out/
 /build/
 
@@ -27,4 +27,6 @@
 Thumbs.db
 /uploads/
 /target/
+/.idea/
+/backend/target/
 /.idea/
