@@ -2,8 +2,8 @@ package io.bvb.smarthealthcare.backend.model;
 
 import io.bvb.smarthealthcare.backend.constant.MedicationTime;
 import io.bvb.smarthealthcare.backend.constant.TimeToTake;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,7 +21,8 @@ public class PrescriptionRequest {
     @NotNull
     private String dosage;
     @NotNull
-    private Set<MedicationTime> medicationTime = new HashSet<>();
+    @Size(min = 1, message = "At least one time of day must be provided")
+    private Set<@NotBlank MedicationTime> medicationTime = new HashSet<>();
     private TimeToTake timeToTake = TimeToTake.AFTER_FOOD;
     @FutureOrPresent
     private LocalDate startDate;

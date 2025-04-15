@@ -31,7 +31,7 @@ spring:
         timeout: 60m
         cookie:
           http-only: true
-debug: true
+debug: false
 
 
 logging:

@@ -43,6 +43,7 @@ public class PrescriptionService {
             prescription.setDoctor(doctor);
             prescription.setPatient(patient);
             prescription.setMedicationName(pr.getMedicationName());
+            prescription.setMedicationTime(pr.getMedicationTime());
             prescription.setDosage(pr.getDosage());
             prescription.setTimeToTake(pr.getTimeToTake());
             prescription.setStartDate(pr.getStartDate());

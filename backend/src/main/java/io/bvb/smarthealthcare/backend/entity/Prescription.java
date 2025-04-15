@@ -38,7 +38,6 @@ public class Prescription {
 
     private String medicationName;
     private String dosage;
-
     private Set<MedicationTime> medicationTime;  // Morning, Afternoon, Night
     @Enumerated(EnumType.STRING)
     private TimeToTake timeToTake;
