@@ -49,12 +49,12 @@
         📬 New "Get in Touch" Message Received
     </div>
     <div class="content">
-        <p><span class="label">Name:</span> {{name}}</p>
-        <p><span class="label">Email:</span> {{email}}</p>
-        <p><span class="label">Mobile:</span> {{mobile}}</p>
-        <p><span class="label">Subject:</span> {{subject}}</p>
+        <p><span class="label">Name:</span> <span th:text="${name}"></span></p>
+        <p><span class="label">Email:</span> <span th:text="${email}"></span></p>
+        <p><span class="label">Mobile:</span> <span th:text="${mobile}"></span></p>
+        <p><span class="label">Subject:</span> <span th:text="${subject}"></span></p>
         <p><span class="label">Message:</span></p>
-        <p style="white-space: pre-line;">{{message}}</p>
+        <p style="white-space: pre-line;"><span th:text="${message}"></span></p>
     </div>
     <div class="footer">
         This message was sent from your website's contact form.
