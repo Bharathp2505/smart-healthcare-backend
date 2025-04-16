@@ -171,15 +171,13 @@ public class EmailService {
     public void sendGetInTouchEmail(final GetInTouchRequest getInTouchRequest) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("name", getInTouchRequest.getName());
-        variables.put("email", getInTouchRequest.getName());
-        variables.put("mobile", getInTouchRequest.getName());
-        variables.put("subject", getInTouchRequest.getSubject());
-        variables.put("message", getInTouchRequest.getMessage());
         // Load and process the HTML template
         Context context = new Context();
-        context.setVariables(variables);
+        context.setVariable("name", getInTouchRequest.getName());
+        context.setVariable("email", getInTouchRequest.getEmail());
+        context.setVariable("mobile", getInTouchRequest.getMobile());
+        context.setVariable("subject", getInTouchRequest.getSubject());
+        context.setVariable("message", getInTouchRequest.getMessage());
         String htmlContent = templateEngine.process("get-in-touch-email-template", context);
 
         helper.setTo(mailFromAddress);
