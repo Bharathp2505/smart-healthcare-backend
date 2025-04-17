@@ -25,13 +25,11 @@ public class UserService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final UserRepository userRepository;
-    private final FileStorageService fileStorageService;
 
-    public UserService(PatientRepository patientRepository, DoctorRepository doctorRepository, UserRepository userRepository, final FileStorageService fileStorageService) {
+    public UserService(PatientRepository patientRepository, DoctorRepository doctorRepository, UserRepository userRepository) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.userRepository = userRepository;
-        this.fileStorageService = fileStorageService;
     }
 
     public void updatePatient(final PutPatientRequest putPatientRequest, final MultipartFile profileImage) {
@@ -40,10 +38,6 @@ public class UserService {
         validateSelfEdit(userResponse, user);
 
         final Patient patient = patientRepository.findById(user.getId()).get();
-        if (profileImage != null && !profileImage.isEmpty()) {
-            final String profileImageUrl = fileStorageService.storeFile(profileImage);
-            patient.setProfilePictureUrl(profileImageUrl);
-        }
         patient.setAddress(putPatientRequest.getAddress());
         patient.setMaritalStatus(putPatientRequest.getMaritalStatus());
         patient.setPreConditions(putPatientRequest.getPreConditions());
@@ -74,10 +68,6 @@ public class UserService {
         final User user = getUser(userResponse.getEmail());
         final Doctor doctor = doctorRepository.findById(user.getId()).get();
         validateSelfEdit(userResponse, user);
-        if (profileImage != null && !profileImage.isEmpty()) {
-            final String profileImageUrl = fileStorageService.storeFile(profileImage);
-            doctor.setProfilePictureUrl(profileImageUrl);
-        }
         doctor.setClinicName(putDoctorRequest.getClinicName());
         doctor.setClinicAddress(putDoctorRequest.getClinicAddress());
         doctor.setSpecialization(putDoctorRequest.getSpecialization());

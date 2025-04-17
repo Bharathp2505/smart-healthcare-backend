@@ -40,7 +40,6 @@ public class PatientResponse extends UserResponse {
         patientResponse.setBloodGroup(patient.getBloodGroup());
         patientResponse.setMaritalStatus(patient.getMaritalStatus());
         patientResponse.setPreConditions(patient.getPreConditions());
-        patientResponse.setProfileImageUrl(patient.getProfilePictureUrl());
         return patientResponse;
     }
 
