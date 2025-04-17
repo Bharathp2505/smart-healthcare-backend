@@ -16,6 +16,7 @@ import org.thymeleaf.context.Context;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -188,6 +189,23 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    public void sendAppointmentNotification(final String subject, final Map<String, String> data) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        // Load and process the HTML template
+        Context context = new Context();
+        context.setVariable("patientName", data.get("patientName"));
+        context.setVariable("appointmentTime", data.get("appointmentTime"));
+        context.setVariable("doctorName", data.get("doctorName"));
+        context.setVariable("clinicName", data.get("clinicName"));
+        String htmlContent = templateEngine.process("appointment_notification", context);
+
+        helper.setTo(mailFromAddress);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true); // true to enable HTML content
+        helper.setFrom(mailFromAddress);
+        mailSender.send(message);
+    }
 }
 
 

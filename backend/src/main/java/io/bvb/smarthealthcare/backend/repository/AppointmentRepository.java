@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
 
     @Query("SELECT appointment FROM Appointment appointment, Patient patient, TimeSlot timeslot WHERE appointment.patient.id = patient.id AND timeslot.date >= :date AND patient.id = :patientId AND appointment.isCancelled = FALSE")
     List<Appointment> findUpcomingAppointments(@Param("patientId") Long patientId, @Param("date") LocalDate date);
+
+    @Query("SELECT a FROM Appointment a WHERE " +
+            "a.timeSlot.date = :date " +
+            "AND a.timeSlot.startTime BETWEEN :start AND :end")
+    List<Appointment> findUpcomingAppointments(
+            @Param("date") LocalDate date,
+            @Param("start") LocalTime start,
+            @Param("end") LocalTime end
+    );
 }
