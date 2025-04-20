@@ -20,13 +20,11 @@ public class PrescriptionRequest {
     private String medicationName;
     @NotNull
     private String dosage;
-    @NotNull
-    @Size(min = 1, message = "At least one time of day must be provided")
-    private Set<@NotBlank MedicationTime> medicationTime = new HashSet<>();
+    @NotEmpty(message = "Medication time list must not be empty")
+    private Set<@NotNull(message = "Each medication time must not be null")MedicationTime> medicationTime;
     private TimeToTake timeToTake = TimeToTake.AFTER_FOOD;
     @FutureOrPresent
     private LocalDate startDate;
     @FutureOrPresent
     private LocalDate endDate;
 }
-

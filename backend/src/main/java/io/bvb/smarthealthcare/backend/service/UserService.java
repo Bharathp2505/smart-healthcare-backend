@@ -32,7 +32,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void updatePatient(final PutPatientRequest putPatientRequest, final MultipartFile profileImage) {
+    public void updatePatient(final PutPatientRequest putPatientRequest) {
         final UserResponse userResponse = CurrentUserData.getUser();
         final User user = getUser(userResponse.getEmail());
         validateSelfEdit(userResponse, user);
@@ -63,7 +63,7 @@ public class UserService {
         LOGGER.info("User is updated successfully :: User Id : {}, Email : {}", user.getId(), user.getEmail());
     }
 
-    public void updateDoctor(final PutDoctorRequest putDoctorRequest, final MultipartFile profileImage) {
+    public void updateDoctor(final PutDoctorRequest putDoctorRequest) {
         final UserResponse userResponse = CurrentUserData.getUser();
         final User user = getUser(userResponse.getEmail());
         final Doctor doctor = doctorRepository.findById(user.getId()).get();

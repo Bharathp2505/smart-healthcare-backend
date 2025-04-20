@@ -37,15 +37,15 @@ public class UserController {
     }*/
 
     @PutMapping("/patient")
-    public UserResponse editPatient(@Valid @RequestPart("data") PutPatientRequest putPatientRequest, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage, final HttpSession httpSession) {
-        userService.updatePatient(putPatientRequest, profileImage);
+    public UserResponse editPatient(@Valid @RequestBody PutPatientRequest putPatientRequest, final HttpSession httpSession) {
+        userService.updatePatient(putPatientRequest);
         httpSession.setAttribute("user", CurrentUserData.getUser());
         return CurrentUserData.getUser();
     }
 
     @PutMapping("/doctor")
-    public UserResponse editDoctor(@Valid @RequestPart("data") PutDoctorRequest putDoctorRequest, @RequestPart(value = "profileImage", required = false) MultipartFile profileImage, final HttpSession httpSession) {
-        userService.updateDoctor(putDoctorRequest, profileImage);
+    public UserResponse editDoctor(@Valid @RequestBody PutDoctorRequest putDoctorRequest, final HttpSession httpSession) {
+        userService.updateDoctor(putDoctorRequest);
         httpSession.setAttribute("user", CurrentUserData.getUser());
         return CurrentUserData.getUser();
     }
